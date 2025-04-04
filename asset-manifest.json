@@ -1,16 +1,16 @@
 {
   "files": {
-    "main.css": "/iptv-app/static/css/main.049ba1ac.css",
-    "main.js": "/iptv-app/static/js/main.fe67ae02.js",
+    "main.css": "/iptv-app/static/css/main.42e1d1de.css",
+    "main.js": "/iptv-app/static/js/main.28bacd7b.js",
     "static/js/453.51f7b1fa.chunk.js": "/iptv-app/static/js/453.51f7b1fa.chunk.js",
     "static/media/logo.svg": "/iptv-app/static/media/logo.6ce24c58023cc2f8fd88fe9d219db6c6.svg",
     "index.html": "/iptv-app/index.html",
-    "main.049ba1ac.css.map": "/iptv-app/static/css/main.049ba1ac.css.map",
-    "main.fe67ae02.js.map": "/iptv-app/static/js/main.fe67ae02.js.map",
+    "main.42e1d1de.css.map": "/iptv-app/static/css/main.42e1d1de.css.map",
+    "main.28bacd7b.js.map": "/iptv-app/static/js/main.28bacd7b.js.map",
     "453.51f7b1fa.chunk.js.map": "/iptv-app/static/js/453.51f7b1fa.chunk.js.map"
   },
   "entrypoints": [
-    "static/css/main.049ba1ac.css",
-    "static/js/main.fe67ae02.js"
+    "static/css/main.42e1d1de.css",
+    "static/js/main.28bacd7b.js"
   ]
 }
