@@ -883,3 +883,95 @@
     .footer { padding: var(--spacing-xl) 0 var(--spacing-md); }
   }
   /* Keyframes for the hero image animation */
+/* --- Appareils (Devices) Section --- */
+/* Existing styles for .deviceGrid remain unchanged */
+/* --- Appareils (Devices) Section --- */
+/* --- Appareils (Devices) Section --- */
+/* Keep existing .deviceGrid and .deviceItem styles unchanged */
+
+.imageWrapper {
+    margin-top: var(--spacing-xl); /* Space above the images */
+    display: flex; /* Use flexbox for side-by-side layout */
+    justify-content: space-between; /* Space images apart */
+    align-items: center; /* Vertically align images */
+    gap: var(--spacing-lg); /* Space between the two images */
+    max-width: 100%; /* Full width of container */
+  }
+  
+  .imageContainerLeft,
+  .imageContainerRight {
+    flex: 1; /* Each container takes equal space */
+    max-width: 45%; /* Limit width for balance (adjust as needed) */
+    padding: var(--spacing-md); /* Subtle padding for framing */
+    background: var(--color-background-card); /* Consistent card-like background */
+    border-radius: var(--border-radius-large); /* Rounded corners */
+    border: 1px solid var(--color-border); /* Subtle border */
+    transition: border-color var(--transition-medium); /* Smooth border transition */
+  }
+  
+  .sectionImage {
+    max-width: 100%; /* Responsive scaling */
+    height: auto; /* Maintain aspect ratio */
+    border-radius: var(--border-radius-medium); /* Slightly sharper than wrapper */
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15); /* Subtle, professional shadow */
+    transition: transform var(--transition-medium), box-shadow var(--transition-medium);
+  }
+  
+  /* Hover effects */
+  .imageContainerLeft:hover,
+  .imageContainerRight:hover {
+    border-color: var(--color-primary); /* Highlight border on hover */
+  }
+  
+  .imageContainerLeft:hover .sectionImage,
+  .imageContainerRight:hover .sectionImage {
+    transform: scale(1.02); /* Subtle scale-up */
+    box-shadow: 0 6px 18px rgba(0, 0, 0, 0.2); /* Deeper shadow on hover */
+  }
+  
+  /* Responsive adjustments */
+  @media (max-width: 768px) {
+    .imageWrapper {
+      flex-direction: column; /* Stack images vertically on smaller screens */
+      gap: var(--spacing-md); /* Reduce gap */
+    }
+    .imageContainerLeft,
+    .imageContainerRight {
+      max-width: 100%; /* Full width on mobile/tablet */
+      margin: 0; /* Remove extra margins */
+    }
+  }
+  
+  @media (max-width: 480px) {
+    .imageContainerLeft,
+    .imageContainerRight {
+      padding: var(--spacing-sm); /* Less padding on small screens */
+    }
+    .sectionImage {
+      box-shadow: 0 3px 8px rgba(0, 0, 0, 0.1); /* Lighter shadow on mobile */
+    }
+  }
+  .eventsSection {
+    padding: 4rem 0;
+    background-image: url('https://info.haas-avocats.com/hubfs/l%E2%80%99IPTV%20est-elle%20ill%C3%A9gale%20%20Le%20cadre%20juridique%20que%20vous%20ne%20pouvez%20pas%20ignorer%20!.png'); /* Chemin vers votre image */
+    background-size: cover;
+    background-position: center;
+    background-repeat: no-repeat;
+    position: relative;
+  }
+  
+  .eventsSection::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background: rgba(0, 0, 0, 0.3); /* Overlay sombre pour lisibilité du texte */
+    z-index: 1;
+  }
+  
+  .eventsSection > * {
+    position: relative;
+    z-index: 2; /* Contenu au-dessus de l'overlay */
+  }

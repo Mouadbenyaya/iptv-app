@@ -16,7 +16,45 @@ const navItems = [
   // { id: 'testimonials', label: 'Avis' }, // Consider adding a Testimonials section
   { id: 'cta', label: 'Commencer' },
 ];
-
+// Ajoutez ceci dans la partie "Data" en haut du fichier, après securityFeatures
+const eventsData = [
+    {
+      icon: Tv,
+      title: "Ligues de Football Européennes",
+      description: "Ne manquez aucun match des plus grandes compétitions européennes.",
+      highlights: [
+        "Ligue des Champions UEFA",
+        "Premier League",
+        "La Liga",
+        "Serie A",
+        "Bundesliga",
+      ],
+    },
+    {
+      icon: Monitor,
+      title: "Séries Exclusives",
+      description: "Accédez aux séries populaires de HBO, AMC, Netflix et plus encore.",
+      highlights: [
+        "Game of Thrones (HBO)",
+        "The Walking Dead (AMC)",
+        "Stranger Things (Netflix)",
+        "Breaking Bad (AMC)",
+        "House of the Dragon (HBO)",
+      ],
+    },
+    {
+      icon: Wifi,
+      title: "Événements Sportifs Mondiaux",
+      description: "Vivez l'action en direct, où que vous soyez.",
+      highlights: [
+        "Formule 1 Grand Prix",
+        "NBA Playoffs",
+        "Tournois de Tennis (Wimbledon, Roland-Garros)",
+        "Coupe du Monde FIFA",
+        "Jeux Olympiques",
+      ],
+    },
+  ];
 const servicesData = [
   {
     icon: Tv,
@@ -39,32 +77,104 @@ const servicesData = [
 ];
 
 const pricingData = [
-  {
-    title: 'Formule Essentiel',
-    description: 'Idéal pour découvrir',
-    price: '19,99€',
-    period: '/mois',
-    features: ['5,000+ chaînes', 'Qualité HD', '2 connexions simultanées', 'VOD basique', 'Support Email'],
-    popular: false,
-  },
-  {
-    title: 'Formule Premium',
-    description: 'Le choix préféré pour le Sport & Divertissement',
-    price: '29,99€',
-    period: '/mois',
-    features: ['10,000+ chaînes', 'Qualité HD & 4K', '4 connexions simultanées', 'VOD complète & à jour', 'Support Prioritaire 24/7'],
-    popular: true,
-    badge: 'Meilleure Offre',
-  },
-  {
-    title: 'Formule Famille Max',
-    description: 'Pour toute la maison, sur tous les écrans',
-    price: '39,99€',
-    period: '/mois',
-    features: ['10,000+ chaînes', 'Qualité HD & 4K/8K', '6 connexions simultanées', 'VOD complète & à jour', 'Support Prioritaire 24/7', 'Contrôle parental facile'],
-    popular: false,
-  },
-];
+    {
+      title: 'Formule Essentiel',
+      description: 'Idéal pour découvrir',
+      price: '19,99€',
+      period: '/mois',
+      features: [
+        '5,000+ chaînes',
+        'Qualité HD',
+        '2 connexions simultanées',
+        'VOD basique',
+        'Support Email',
+      ],
+      popular: false,
+      button: 'Commander Maintenant',
+    },
+    {
+      title: 'Formule Premium',
+      description: 'Le choix préféré pour le Sport & Divertissement',
+      price: '29,99€',
+      period: '/mois',
+      features: [
+        '10,000+ chaînes',
+        'Qualité HD & 4K',
+        '4 connexions simultanées',
+        'VOD complète & à jour',
+        'Support Prioritaire 24/7',
+      ],
+      popular: true,
+      button: 'Commander Maintenant',
+      badge: 'Meilleure Offre',
+    },
+    {
+      title: 'Formule Famille Max',
+      description: 'Pour toute la maison, sur tous les écrans',
+      price: '39,99€',
+      period: '/mois',
+      features: [
+        '10,000+ chaînes',
+        'Qualité HD & 4K/8K',
+        '6 connexions simultanées',
+        'VOD complète & à jour',
+        'Support Prioritaire 24/7',
+        'Contrôle parental facile',
+      ],
+      popular: false,
+      button: 'Commander Maintenant',
+    },
+    {
+      title: 'Formule Ultra',
+      description: 'Pour les utilisateurs exigeants',
+      price: '49,99€',
+      period: '/mois',
+      features: [
+        '15,000+ chaînes',
+        'Qualité 4K & 8K',
+        '6 connexions simultanées',
+        'VOD complète et à jour',
+        'Support 24/7 avec chat en direct',
+        'Fonctionnalités avancées',
+      ],
+      popular: false,
+      button: 'Commander Maintenant',
+    },
+    {
+      title: 'Formule VIP',
+      description: 'Pour une expérience haut de gamme',
+      price: '59,99€',
+      period: '/mois',
+      features: [
+        'Accès complet à toutes les chaînes',
+        'Qualité 4K & 8K ultra haute définition',
+        'Connexions illimitées',
+        'VOD exclusive et à jour',
+        'Support dédié VIP 24/7',
+        'Fonctionnalités personnalisées',
+      ],
+      popular: false,
+      button: 'Commander Maintenant',
+    },
+    {
+      title: 'Formule Diamant',
+      description: 'L\'expérience ultime avec toutes les fonctionnalités',
+      price: '69,99€',
+      period: '/mois',
+      features: [
+        'Accès à 20,000+ chaînes',
+        'Qualité 4K, 8K & HDR',
+        'Connexions illimitées',
+        'VOD complète et exclusive',
+        'Support dédié 24/7 avec chat en direct et téléphonique',
+        'Options personnalisées et prévisions de contenu',
+      ],
+      popular: false,
+      button: 'Commander Maintenant',
+    },
+  ];
+  
+  
 
 const devicesData = [
     { icon: Smartphone, name: 'Smartphones', desc: 'iOS & Android (Apps dédiées)' },
@@ -404,9 +514,7 @@ const IPTVWebsite = () => {
                   );
                })}
             </div>
-            {/* <div className={styles.setupGuideLink}> */}
-            {/* <button>Voir les guides d'installation</button> */}
-            {/* </div> */}
+            
           </div>
         </section>
 
@@ -425,7 +533,37 @@ const IPTVWebsite = () => {
                 </div>
             </div>
         </section>
-
+         {/* Événements Section */}
+<section id="evenements" className={styles.eventsSection} aria-labelledby="evenements-title">
+  <div className={styles.container}>
+    <div className={`${styles.sectionHeading}`}>
+      <h2 id="evenements-title" className={styles.sectionTitle}>Événements à ne pas Manquer</h2>
+      <p className={styles.sectionSubtitle}>Du sport en direct aux séries incontournables, tout est là.</p>
+    </div>
+    <div className={`${styles.cardGrid} ${styles.cardGrid3Cols}`}>
+      {eventsData.map((event, index) => {
+        const IconComponent = event.icon;
+        return (
+          <div key={index} className={`${styles.card} ${styles.eventCard}`}>
+            <div className={styles.cardIcon}>
+              <IconComponent className={styles.iconAnimated} aria-hidden="true" />
+            </div>
+            <h3 className={styles.cardTitle}>{event.title}</h3>
+            <p className={styles.cardDescription}>{event.description}</p>
+            <ul className={styles.featureList}>
+              {event.highlights.map((highlight, hIndex) => (
+                <li key={hIndex}>
+                  <Check aria-hidden="true" className={styles.featureIcon} />
+                  <span>{highlight}</span>
+                </li>
+              ))}
+            </ul>
+          </div>
+        );
+      })}
+    </div>
+  </div>
+</section>
         {/* Sécurité Section */}
         <section id="securite" className={styles.securitySection} aria-labelledby="securite-title">
           <div className={styles.container}>
