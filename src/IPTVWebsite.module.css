@@ -1,880 +1,885 @@
-/* IPTVWebsite.module.css */
+/* IPTVWebsite.module.css - Professional/Streaming Style */
 
-/* ----------------------------- */
-/* --- Variables & Globales --- */
-/* ----------------------------- */
+/* --- :root Variables (Customize!) --- */
 :root {
-    --primary-color: #4f46e5; /* Indigo-like */
-    --primary-color-dark: #4338ca;
-    --secondary-color: #10b981; /* Emerald/Green-like for accents */
-    --text-color: #1f2937; /* Dark Gray */
-    --text-color-light: #6b7280; /* Medium Gray */
-    --bg-color: #ffffff;
-    --bg-color-alt: #f9fafb; /* Very Light Gray */
-    --border-color: #e5e7eb; /* Light Gray Border */
-    --card-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1), 0 2px 4px -1px rgba(0, 0, 0, 0.06);
-    --border-radius: 0.5rem; /* 8px */
-    --container-max-width: 1140px;
-    --header-height: 70px; /* Adjust as needed */
+    /* ** IMPORTANT: Replace #4A90E2 with your desired primary color! ** */
+    --color-primary: #4A90E2; /* Placeholder Professional Blue */
+    --color-primary-dark: #357ABD; /* Example darker shade for hover */
+    --color-primary-light: #7aaee8; /* Example lighter shade */
+  
+    --color-background-dark: #0a0a0c; /* Slightly deeper black */
+    --color-background-medium: #121214;
+    --color-background-card: #1a1a1e;
+    --color-background-card-hover: #212125;
+    --color-background-popular: #1f1f23; /* Subtle difference for popular */
+    --color-background-cta: #000000; /* Example: Darker CTA background */
+  
+    --color-text-light: #ffffff;
+    --color-text-medium: #e0e0e0; /* Slightly brighter medium text */
+    --color-text-dark: #a0a0a5;
+    --color-border: #303035; /* Slightly lighter border */
+    --color-success: #28a745; /* Keep for checkmarks */
+    --color-focus-outline: var(--color-primary-light); /* Use light shade for focus */
+  
+    /* Consider using a clean Sans-Serif font */
+    --font-family-base: 'Inter', 'Montserrat', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, 'Open Sans', 'Helvetica Neue', sans-serif;
+    --font-weight-normal: 400;
+    --font-weight-medium: 500; /* Added medium weight */
+    --font-weight-semibold: 600;
+    --font-weight-bold: 700;
+    --font-weight-black: 900; /* Keep for main titles if needed */
+  
+    --header-height: 70px; /* Slightly reduced header height */
+    --border-radius-small: 3px; /* Sharper radii */
+    --border-radius-medium: 6px;
+    --border-radius-large: 12px;
+    --border-radius-round: 50px; /* Keep for specific buttons if desired */
+  
+    /* Consider slightly more generous spacing */
+    --spacing-xs: 0.25rem;
+    --spacing-sm: 0.5rem;
+    --spacing-md: 1rem;
+    --spacing-lg: 1.5rem;
+    --spacing-xl: 2rem;
+    --spacing-xxl: 3rem; /* Increased xxl */
+    --spacing-section: 7rem; /* Increased section spacing */
+  
+    --transition-fast: 0.2s ease;
+    --transition-medium: 0.3s ease;
+    --transition-smooth: 0.4s cubic-bezier(0.4, 0, 0.2, 1); /* Smoother cubic-bezier */
   }
   
-  /* Basic Reset & Body */
-  *,
-  *::before,
-  *::after {
-    box-sizing: border-box;
-    margin: 0;
-    padding: 0;
+  /* --- Base Styles and Reset --- */
+  .iptvWebsiteWrapper {
+    font-family: var(--font-family-base);
+    background: var(--color-background-dark); /* Simpler dark background */
+    color: var(--color-text-medium); /* Default to medium text */
+    line-height: 1.6;
+    overflow-x: hidden;
   }
   
-  /* Applied via JS, but good to have in CSS too if JS fails or for static analysis */
-  /* html {
-    scroll-behavior: smooth;
+  /* --- Utility Classes --- */
+  .container {
+    max-width: 1320px; /* Slightly wider container */
+    margin: 0 auto;
+    padding: 0 var(--spacing-xl); /* Increased base padding */
+  }
+  
+  .itemsStretch {
+    align-items: stretch;
+  }
+  
+  /* --- Animations (Keep subtle ones, remove decorative ones) --- */
+  @keyframes fadeInUp {
+    from { opacity: 0; transform: translateY(20px); } /* Less distance */
+    to { opacity: 1; transform: translateY(0); }
+  }
+  
+  @keyframes slideInLeft {
+    from { opacity: 0; transform: translateX(-30px); } /* Less distance */
+    to { opacity: 1; transform: translateX(0); }
+  }
+  
+  /* Optional subtle pulse for CTA background - remove if unwanted */
+  /* @keyframes subtlePulse {
+    0%, 100% { opacity: 0.05; }
+    50% { opacity: 0.1; }
   } */
   
-  body {
-    font-family: 'Inter', sans-serif; /* Example font, replace if needed */
-    line-height: 1.6;
-    color: var(--text-color);
-    background-color: var(--bg-color);
+  /* Apply basic fade-in for elements if needed, enhance with libraries */
+  .fadeIn {
+    animation: fadeInUp 0.8s ease-out forwards;
+    opacity: 0; /* Start hidden */
+    /* Recommendation: Use Intersection Observer + animation library for better control */
   }
   
-  /* Main Wrapper (optional, if needed for overall styling) */
-  .iptvWebsiteWrapper {
-    overflow-x: hidden; /* Prevent horizontal scroll */
-  }
-  
-  /* --------------------- */
-  /* --- Container --- */
-  /* --------------------- */
-  .container {
-    width: 90%;
-    max-width: var(--container-max-width);
-    margin-left: auto;
-    margin-right: auto;
-    padding-left: 1rem;
-    padding-right: 1rem;
-  }
-  
-  /* --------------------- */
   /* --- Header --- */
-  /* --------------------- */
-  .header {
+  .stickyHeader {
     position: sticky;
     top: 0;
-    left: 0;
-    width: 100%;
-    background-color: rgba(255, 255, 255, 0.9); /* Semi-transparent white */
-    backdrop-filter: blur(10px); /* Glassmorphism effect */
-    border-bottom: 1px solid var(--border-color);
-    z-index: 50;
+    background-color: rgba(18, 18, 20, 0.85); /* Solid dark color with opacity */
+    backdrop-filter: blur(12px);
+    -webkit-backdrop-filter: blur(12px);
+    z-index: 1000;
+    padding: 0; /* Padding handled by container */
     height: var(--header-height);
     display: flex;
     align-items: center;
+    border-bottom: 1px solid var(--color-border); /* Add subtle border */
+    box-shadow: none; /* Remove shadow for cleaner look */
   }
   
   .header .container {
     display: flex;
-    justify-content: space-between;
     align-items: center;
+    justify-content: space-between;
+    gap: var(--spacing-lg);
   }
   
   .logoLink {
-    cursor: pointer;
     text-decoration: none;
+    color: inherit;
+    display: inline-block;
+  }
+  .logoLink:focus-visible {
+    outline: 2px solid var(--color-focus-outline);
+    outline-offset: 4px; /* More offset */
+    border-radius: var(--border-radius-small);
   }
   
   .logoText {
-    font-size: 1.75rem; /* ~28px */
-    font-weight: 700;
-    color: var(--text-color);
+    font-size: clamp(1.5rem, 3vw, 1.8rem); /* Slightly smaller logo */
+    font-weight: var(--font-weight-bold); /* Bold is usually enough */
+    letter-spacing: -0.02em; /* Less aggressive letter spacing */
+    color: var(--color-text-light);
+    transition: color var(--transition-fast);
+  }
+  .logoLink:hover .logoText {
+    color: var(--color-text-medium); /* Less prominent hover */
   }
   
   .logoTextSpan {
-    color: var(--primary-color);
+    color: var(--color-primary); /* Solid primary color, no gradient */
+    /* Remove gradient text styles */
   }
   
   .navigation {
     display: flex;
-    gap: 0.5rem; /* Spacing between nav buttons */
+    gap: var(--spacing-lg); /* Increase gap slightly */
   }
   
-  .navButton {
+  .navButton { /* Styles for <a> */
+    position: relative;
     background: none;
     border: none;
-    padding: 0.5rem 1rem;
-    font-size: 1rem;
-    font-weight: 500;
-    color: var(--text-color-light);
+    color: var(--color-text-medium);
+    font-size: 0.95rem; /* Adjust size */
+    font-weight: var(--font-weight-medium); /* Medium weight */
+    text-transform: none; /* Remove uppercase */
+    text-decoration: none;
     cursor: pointer;
-    transition: color 0.2s ease-in-out, border-color 0.2s ease-in-out;
-    border-bottom: 2px solid transparent;
+    padding: var(--spacing-sm) 0;
+    transition: color var(--transition-medium);
   }
   
-  .navButton:hover {
-    color: var(--text-color);
-  }
+  /* Remove underline effect or make it much subtler */
+  .navButton::after {
+     content: '';
+     position: absolute;
+     bottom: -2px; /* Position below text */
+     left: 0;
+     width: 0;
+     height: 2px;
+     background: var(--color-primary);
+     transition: width var(--transition-medium);
+     opacity: 0.7;
+   }
   
+  .navButton:hover,
   .navButton.active {
-    color: var(--primary-color);
-    font-weight: 600;
-    border-bottom-color: var(--primary-color);
+    color: var(--color-text-light); /* Hover/Active: Brighten text */
   }
   
-  .whatsappButton {
-    display: inline-flex; /* Use inline-flex for icon alignment */
-    align-items: center;
-    gap: 0.5rem; /* Space between text and icon */
-    background-color: var(--secondary-color);
-    color: white;
-    padding: 0.6rem 1.2rem;
+  /* Only show underline on active state */
+  .navButton.active::after {
+     width: 100%;
+   }
+  
+   /* Remove hover transform */
+   /* .navButton:hover {
+     transform: translateY(-2px);
+   } */
+  
+  .navButton:focus-visible {
+    outline: 2px solid var(--color-focus-outline);
+    outline-offset: 4px;
+    border-radius: var(--border-radius-small);
+    color: var(--color-text-light);
+  }
+  
+  /* --- General Button Styles (Solid Color) --- */
+  .gradientButton { /* Rename class or update React if needed */
+    background-color: var(--color-primary);
+    padding: var(--spacing-sm) var(--spacing-lg);
     border: none;
-    border-radius: var(--border-radius);
-    font-weight: 600;
+    border-radius: var(--border-radius-medium); /* Slightly less round */
+    color: var(--color-text-light); /* Ensure contrast */
+    font-weight: var(--font-weight-semibold); /* Semibold is often enough */
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    gap: var(--spacing-sm);
     cursor: pointer;
-    transition: background-color 0.2s ease-in-out;
-    text-decoration: none; /* In case it's used as a link */
+    transition: background-color var(--transition-medium), transform var(--transition-fast);
+    box-shadow: none; /* Remove shadow */
+    text-decoration: none;
+    white-space: nowrap;
   }
   
-  .whatsappButton:hover {
-    background-color: #0f9b6d; /* Darker green */
+  .gradientButton:hover {
+    background-color: var(--color-primary-dark); /* Darken on hover */
+    transform: scale(1.03); /* Subtle scale */
+    box-shadow: none;
   }
   
-  .whatsappButton .buttonIcon {
-    width: 1.2em; /* Adjust icon size relative to font */
-    height: 1.2em;
-    stroke-width: 2.5;
+  .gradientButton:focus-visible {
+    outline: 3px solid var(--color-focus-outline);
+    outline-offset: 2px;
+    background-color: var(--color-primary-dark);
   }
   
-  /* --------------------- */
+  .buttonIcon {
+    width: 18px; /* Slightly smaller icon */
+    height: 18px;
+    transition: transform var(--transition-medium);
+    margin-left: var(--spacing-sm);
+  }
+  
+  .gradientButton:hover .buttonIcon {
+    transform: translateX(3px); /* Less movement */
+  }
+  
+  /* Specific Button Instances */
+  .headerContactButton {
+    font-size: 0.9rem;
+    padding: var(--spacing-xs) var(--spacing-md);
+  }
+  
   /* --- Hero Section --- */
-  /* --------------------- */
   .heroSection {
-    padding: 6rem 0; /* More vertical padding */
-    background-color: var(--bg-color-alt);
+    position: relative;
+    min-height: calc(100vh - var(--header-height));
+    display: flex;
+    align-items: center;
+    /* background: url('/path/to/high-quality-hero.jpg') no-repeat center center/cover; */
+    background-color: var(--color-background-dark);
+    overflow: hidden;
+  }
+  
+  .heroSection::before { /* Overlay */
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    /* Use a darker, less saturated gradient or solid overlay */
+    background: linear-gradient(135deg, rgba(0, 0, 0, 0.8), rgba(10, 10, 12, 0.6) 70%, transparent 100%);
+    z-index: 1;
   }
   
   .heroContainer {
-    display: flex;
-    align-items: center;
-    gap: 3rem; /* Space between text and image */
+    position: relative;
+    z-index: 2;
+    display: flex; /* <<< ADD: Enable Flexbox */
+    align-items: center; /* <<< ADD: Vertically align items */
+    justify-content: space-between; /* <<< ADD: Space between text and image */
+    gap: var(--spacing-xl); /* <<< ADD: Gap between text and image */
   }
   
   .heroContent {
-    flex: 1; /* Take available space */
+    flex: 1 1 55%; /* <<< MODIFY: Control width (adjust 55% as needed) */
+    /* max-width: 65%; << COMMENT OUT or REMOVE this if using flex basis */
+    /* Animation: Apply subtle fade/slide */
   }
   
   .heroTitle {
-    font-size: 3rem; /* ~48px */
-    font-weight: 800;
-    line-height: 1.2;
-    margin-bottom: 1rem;
-    color: var(--text-color);
+    font-size: clamp(2.8rem, 6vw, 4.8rem); /* Potentially larger title */
+    font-weight: var(--font-weight-bold); /* Bold or Black */
+    letter-spacing: -0.02em;
+    line-height: 1.15;
+    margin-bottom: var(--spacing-lg);
+    color: var(--color-text-light);
+    /* Animation */
   }
   
   .heroSubtitle {
-    font-size: 1.125rem; /* ~18px */
-    color: var(--text-color-light);
-    margin-bottom: 2rem;
-    max-width: 600px; /* Limit text width */
+    font-size: clamp(1.1rem, 2vw, 1.4rem);
+    color: var(--color-text-medium);
+    margin-bottom: var(--spacing-xxl); /* More space */
+    max-width: 650px;
+    /* Animation */
   }
   
   .heroButtons {
     display: flex;
-    gap: 1rem;
-    flex-wrap: wrap; /* Allow buttons to wrap on small screens */
+    flex-wrap: wrap;
+    gap: var(--spacing-lg); /* Increase gap */
+    /* Animation */
+  }
+ /* Find this existing block in your CSS */
+
+  
+/* Find this existing block in your CSS */
+.heroImageContainer {
+    flex: 1 1 40%;
+    max-width: 500px;
+  
+    /* --- REMOVE or COMMENT OUT Floating Animation --- */
+    /* animation-name: gentleFloat; */
+    /* animation-duration: 4s; */
+    /* animation-timing-function: ease-in-out; */
+    /* animation-iteration-count: infinite; */
+    /* animation-direction: alternate; */
+    /* --- End Removal --- */
+  
+    /* <<< ADD THESE LINES for Entrance Animation >>> */
+    opacity: 0; /* Start hidden */
+    animation-name: slideFadeInFromRight; /* Defined in your keyframes */
+    animation-duration: 1.2s;             /* Adjust duration */
+    animation-timing-function: cubic-bezier(0.25, 0.46, 0.45, 0.94); /* Smooth ease */
+    animation-fill-mode: forwards;        /* Stay visible */
+    animation-delay: 0.3s;                /* Optional delay */
+    /* <<< END Entrance Animation Lines >>> */
   }
   
-  .offersButton {
-    background-color: var(--primary-color);
-    color: white;
-    padding: 0.8rem 1.5rem;
-    border: none;
-    border-radius: var(--border-radius);
-    font-weight: 600;
-    cursor: pointer;
-    transition: background-color 0.2s ease-in-out;
+  /* Keyframes definition (Make sure this is still in your CSS) */
+  @keyframes slideFadeInFromRight {
+    from {
+      opacity: 0;
+      transform: translateX(30px) translateY(15px); /* Start offset */
+    }
+    to {
+      opacity: 1;
+      transform: translateX(0) translateY(0); /* End at final position */
+    }
   }
   
-  .offersButton:hover {
-    background-color: var(--primary-color-dark);
-  }
-  
-  /* Modifier for WhatsApp button in Hero */
-  .whatsappHeroButton {
-    background-color: transparent;
-    color: var(--secondary-color);
-    border: 2px solid var(--secondary-color);
-    padding: calc(0.8rem - 2px) calc(1.5rem - 2px); /* Adjust padding for border */
-  }
-  
-  .whatsappHeroButton:hover {
-    background-color: rgba(16, 185, 129, 0.1); /* Light green background on hover */
-    color: #0f9b6d; /* Darker green text on hover */
-  }
-  
+  /* Style for the image itself */
   .heroImage {
-    flex-shrink: 0; /* Prevent image from shrinking */
-    text-align: center; /* Center icon if flex direction changes */
+    display: block;
+    max-width: 100%;
+    height: auto;
+    border-radius: var(--border-radius-medium);
   }
   
-  .heroIcon {
-    width: 150px; /* Adjust size as needed */
-    height: 150px;
-    color: var(--primary-color);
+  .ctaButtonHero {
+    padding: var(--spacing-md) var(--spacing-xl);
+    font-size: 1.05rem; /* Adjust size */
+    font-weight: var(--font-weight-semibold);
   }
   
+  /* Secondary button: Ghost style */
+  .secondaryButtonHero {
+    background-color: transparent;
+    border: 2px solid var(--color-border); /* Use subtle border color */
+    color: var(--color-text-medium);
+    padding: calc(var(--spacing-md) - 2px) calc(var(--spacing-xl) - 2px); /* Adjust padding for border */
+    border-radius: var(--border-radius-medium);
+    font-weight: var(--font-weight-semibold);
+    display: inline-flex;
+    align-items: center;
+    gap: var(--spacing-sm);
+    cursor: pointer;
+    transition: background-color var(--transition-medium), border-color var(--transition-medium), color var(--transition-medium);
+    font-size: 1.05rem;
+  }
   
-  /* ----------------------------- */
-  /* --- Section Generic Styles --- */
-  /* ----------------------------- */
+  .secondaryButtonHero:hover {
+    background-color: rgba(255, 255, 255, 0.05); /* Subtle background */
+    border-color: var(--color-primary);
+    color: var(--color-primary);
+    transform: none; /* No lift */
+  }
+  
+  .secondaryButtonHero:focus-visible {
+    outline: 2px solid var(--color-focus-outline);
+    outline-offset: 2px;
+    border-color: var(--color-primary); /* Make border visible on focus */
+    color: var(--color-primary);
+  }
+  
+  /* --- General Section Styles --- */
   .servicesSection,
   .abonnementsSection,
   .appareilsSection,
   .faqSection,
   .securitySection,
   .ctaSection {
-    padding: 4rem 0; /* Vertical padding for sections */
-  }
-  
-  /* Alternate background for visual separation */
-  .servicesSection,
-  .appareilsSection,
-  .securitySection {
-    background-color: var(--bg-color-alt);
+    padding: var(--spacing-section) 0;
   }
   
   .sectionHeading {
     text-align: center;
-    margin-bottom: 3rem;
+    margin-bottom: var(--spacing-xxl); /* Increase space */
+    /* Animation */
   }
   
   .sectionTitle {
-    font-size: 2.25rem; /* ~36px */
-    font-weight: 700;
-    margin-bottom: 0.75rem;
+    font-size: clamp(2.2rem, 4.5vw, 3rem); /* Slightly larger section titles */
+    font-weight: var(--font-weight-bold);
+    margin-bottom: var(--spacing-md);
+    color: var(--color-text-light);
   }
   
   .sectionSubtitle {
-    font-size: 1.125rem; /* ~18px */
-    color: var(--text-color-light);
-    max-width: 700px;
-    margin-left: auto;
-    margin-right: auto;
+    font-size: clamp(1.05rem, 1.6vw, 1.3rem);
+    color: var(--color-text-dark);
+    max-width: 750px;
+    margin: 0 auto;
   }
   
-  
-  /* ----------------------------- */
-  /* --- Cards & Grids ----------- */
-  /* ----------------------------- */
+  /* --- Card Grid Styles --- */
   .cardGrid {
     display: grid;
-    gap: 1.5rem; /* Space between cards */
+    gap: var(--spacing-xl);
   }
+  .cardGrid3Cols { grid-template-columns: repeat(auto-fit, minmax(320px, 1fr)); }
+  .cardGrid2Cols { grid-template-columns: repeat(auto-fit, minmax(450px, 1fr)); }
   
-  /* Modifier for 3 columns */
-  .cardGrid3Cols {
-    grid-template-columns: repeat(3, 1fr);
-  }
-  
-  /* Modifier for 2 columns */
-  .cardGrid2Cols {
-    grid-template-columns: repeat(2, 1fr);
-  }
-  
-  /* Base Card Style */
+  /* --- General Card Styles --- */
   .card {
-    background-color: var(--bg-color);
-    border-radius: var(--border-radius);
-    box-shadow: var(--card-shadow);
-    padding: 2rem;
-    border: 1px solid var(--border-color);
-    transition: transform 0.2s ease-in-out, box-shadow 0.2s ease-in-out;
+    background: var(--color-background-card);
+    padding: var(--spacing-xl);
+    border-radius: var(--border-radius-large);
+    border: 1px solid var(--color-border); /* Add subtle border */
+    transition: background-color var(--transition-medium), border-color var(--transition-medium), transform var(--transition-fast);
+    box-shadow: none; /* No shadow */
+    /* Animation: Staggered fade-up */
   }
   
   .card:hover {
-    transform: translateY(-5px);
-    box-shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.1), 0 4px 6px -2px rgba(0, 0, 0, 0.05);
+    transform: translateY(-5px); /* Very subtle lift */
+    background: var(--color-background-card-hover);
+    border-color: var(--color-primary); /* Highlight border on hover */
+    box-shadow: none;
   }
   
   .cardTitle {
-    font-size: 1.25rem; /* ~20px */
-    font-weight: 600;
-    margin-bottom: 0.75rem;
+    font-size: 1.5rem; /* Adjust size */
+    font-weight: var(--font-weight-semibold);
+    margin-top: 0;
+    margin-bottom: var(--spacing-md);
+    color: var(--color-text-light);
   }
   
   .cardDescription {
-    color: var(--text-color-light);
-    font-size: 0.9rem;
-    margin-bottom: 1.5rem;
+      color: var(--color-text-medium);
+      margin-bottom: var(--spacing-md);
+      font-size: 0.95rem;
   }
   
-  /* Card Icon Wrapper (used in Services, Security) */
-  .cardIcon,
-  .securityIconWrapper,
-  .deviceIconWrapper {
-    display: inline-flex; /* Allows sizing */
-    justify-content: center;
-    align-items: center;
-    margin-bottom: 1rem;
-    padding: 1rem;
-    border-radius: 50%; /* Circular background */
-    background-color: rgba(79, 70, 229, 0.1); /* Light primary background */
-  }
-  .cardIcon svg,
-  .securityIconWrapper svg,
-  .deviceIconWrapper svg {
-    width: 32px;
-    height: 32px;
-    color: var(--primary-color);
-    stroke-width: 2;
+  /* --- Services Section Cards --- */
+  
+  .cardIcon {
+    margin-bottom: var(--spacing-lg);
+    color: var(--color-primary);
+    display: inline-block;
   }
   
-  /* Lists within cards */
-  .card ul {
+  .iconAnimated {
+    width: 40px; /* Smaller icons */
+    height: 40px;
+    transition: transform var(--transition-medium);
+  }
+  .serviceCard:hover .iconAnimated {
+    transform: scale(1.1); /* Remove rotation */
+  }
+  
+  .featureList {
     list-style: none;
     padding: 0;
-    margin-top: 1rem;
+    margin: var(--spacing-lg) 0 0 0; /* Adjust margin */
   }
-  
-  .card li {
+  .featureList li {
     display: flex;
-    align-items: flex-start; /* Align icon with start of text */
-    gap: 0.75rem;
-    margin-bottom: 0.75rem;
-    color: var(--text-color-light);
+    align-items: flex-start; /* Align top for potentially longer text */
+    gap: var(--spacing-sm);
+    margin-bottom: var(--spacing-sm);
+    color: var(--color-text-medium);
+    font-size: 0.9rem; /* Adjust font size */
+  }
+  .featureIcon {
+    width: 16px;
+    height: 16px;
+    color: var(--color-primary); /* Use primary color for checks */
+    flex-shrink: 0;
+    margin-top: 3px; /* Align with text */
   }
   
-  .card li svg {
-    flex-shrink: 0; /* Prevent icon from shrinking */
-    width: 1.2em;
-    height: 1.2em;
-    color: var(--secondary-color); /* Green checkmarks */
-    margin-top: 0.1em; /* Slight adjustment for alignment */
-    stroke-width: 3;
-  }
-  
-  
-  /* -------------------------- */
-  /* --- Services Section --- */
-  /* -------------------------- */
-  /* .serviceCard uses base .card styles */
-  .serviceCard {
-    text-align: left; /* Override potential centering */
-  }
-  .serviceCard p {
-      color: var(--text-color); /* Slightly darker paragraph */
-      margin-bottom: 1rem;
-  }
-  
-  /* -------------------------- */
-  /* --- Abonnements Section --- */
-  /* -------------------------- */
-  .itemsStretch {
-    /* Applied to the .cardGrid container */
-    align-items: stretch; /* Makes cards in a row the same height */
+  /* --- Abonnements (Pricing) Section --- */
+  .abonnementsSection {
+    background: var(--color-background-medium); /* Use medium bg */
   }
   
   .pricingCard {
-    text-align: center;
     display: flex;
-    flex-direction: column; /* Arrange content vertically */
-  }
-  
-  .pricingCard .price {
-    font-size: 2.5rem; /* ~40px */
-    font-weight: 700;
-    color: var(--primary-color);
-    margin-bottom: 1.5rem;
-  }
-  
-  .pricingCard .price span {
-    font-size: 1rem;
-    font-weight: 500;
-    color: var(--text-color-light);
-  }
-  
-  .pricingCard ul {
-    text-align: left;
-    margin-bottom: 2rem; /* Space before button */
-    flex-grow: 1; /* Push button to bottom */
-  }
-  .pricingCard li span {
-      color: var(--text-color); /* Feature text */
-  }
-  
-  
-  .orderButton {
-    display: block; /* Make button take full width */
-    width: 100%;
-    background-color: var(--primary-color);
-    color: white;
-    padding: 0.8rem 1.5rem;
-    border: none;
-    border-radius: var(--border-radius);
-    font-weight: 600;
-    cursor: pointer;
-    transition: background-color 0.2s ease-in-out;
-    margin-top: auto; /* Ensure button is at the bottom */
-  }
-  
-  .orderButton:hover {
-    background-color: var(--primary-color-dark);
-  }
-  
-  /* Popular Card Styling */
-  .popular {
-    border: 2px solid var(--primary-color);
+    flex-direction: column;
     position: relative;
-    overflow: hidden; /* To contain the badge */
+  }
+  .pricingCard .featureList {
+      margin-top: var(--spacing-lg);
+      margin-bottom: var(--spacing-xl);
+      flex-grow: 1;
+  }
+  
+  .popular {
+    border: 2px solid var(--color-primary); /* Thicker border */
+    background: var(--color-background-popular);
+    transform: scale(1.02); /* Subtle scale */
+    /* box-shadow: 0 10px 25px rgba(0, 0, 0, 0.2); Optional subtle shadow */
+  }
+  .popular:hover {
+      transform: scale(1.03) translateY(-5px);
+      border-color: var(--color-primary-light);
   }
   
   .popularBadge {
+    background: var(--color-primary);
+    color: var(--color-text-light);
+    padding: var(--spacing-xs) var(--spacing-md);
+    border-radius: var(--border-radius-medium) 0 var(--border-radius-medium) 0; /* Example stylish badge */
     position: absolute;
-    top: 1rem;
-    right: -35px; /* Position off-card initially */
-    transform: rotate(45deg);
-    background-color: var(--primary-color);
-    color: white;
-    padding: 0.3rem 2.5rem; /* Wide padding for ribbon effect */
-    font-size: 0.8rem;
-    font-weight: 600;
-    text-align: center;
-    box-shadow: 0 2px 4px rgba(0,0,0,0.2);
+    top: -1px; /* Align with border */
+    right: -1px; /* Position top-right */
+    transform: none; /* Remove translation */
+    font-weight: var(--font-weight-semibold);
+    font-size: 0.85rem;
+    /* animation: none; Remove bounce animation */
+    z-index: 3;
   }
   
-  /* Style order button differently for popular plan */
-  .popular .orderButton {
-      background-color: var(--primary-color);
+  .price {
+    font-size: clamp(2rem, 5vw, 2.5rem);
+    font-weight: var(--font-weight-bold);
+    margin: var(--spacing-md) 0;
+    color: var(--color-text-light); /* Price standout */
   }
-  .popular .orderButton:hover {
-      background-color: var(--primary-color-dark);
+  .price span {
+    font-size: 1rem;
+    color: var(--color-text-dark);
+    font-weight: var(--font-weight-normal);
   }
   
-  /* ----------------------------- */
-  /* --- Appareils Section ------- */
-  /* ----------------------------- */
+  .orderButton {
+    width: 100%;
+    margin-top: auto;
+    padding: var(--spacing-md) var(--spacing-lg);
+    font-size: 1rem;
+  }
+  
+  /* --- Appareils (Devices) Section --- */
   .deviceGrid {
     display: grid;
-    grid-template-columns: repeat(auto-fit, minmax(150px, 1fr)); /* Responsive grid */
-    gap: 2rem;
+    grid-template-columns: repeat(auto-fit, minmax(180px, 1fr));
+    gap: var(--spacing-xl);
     text-align: center;
-    margin-bottom: 3rem;
   }
   
-  .deviceItem h3 {
-    font-size: 1.1rem;
-    font-weight: 600;
-    margin-top: 0.5rem; /* Space between icon and title */
-    margin-bottom: 0.25rem;
+  .deviceItem {
+    opacity: 0;
+    animation: fadeInUp 0.7s ease-out forwards; /* Faster animation */
+    animation-delay: calc(0.08s * var(--i)); /* Faster stagger */
+    padding: var(--spacing-lg);
+    transition: background-color var(--transition-fast);
+    border-radius: var(--border-radius-medium);
+  }
+  .deviceItem:hover {
+      background-color: var(--color-background-card); /* Subtle bg on hover */
+      transform: none; /* No lift */
   }
   
-  .deviceItem p {
+  .deviceIconWrapper {
+      background-color: transparent; /* Remove background circle */
+      width: auto;
+      height: auto;
+      margin: 0 auto var(--spacing-md) auto;
+      color: var(--color-primary);
+  }
+  .deviceIconWrapper .iconAnimated {
+      width: 48px; /* Increase icon size */
+      height: 48px;
+      transition: transform var(--transition-medium);
+  }
+  .deviceItem:hover .iconAnimated {
+      transform: scale(1.1); /* Subtle scale on hover */
+  }
+  
+  .deviceName {
+    font-size: 1.2rem;
+    font-weight: var(--font-weight-semibold);
+    margin: 0 0 var(--spacing-xs) 0;
+    color: var(--color-text-light);
+  }
+  
+  .deviceDesc {
     font-size: 0.9rem;
-    color: var(--text-color-light);
+    color: var(--color-text-dark);
+    margin: 0;
   }
   
-  .configBox {
-    background-color: var(--bg-color);
-    border-radius: var(--border-radius);
-    padding: 2rem;
-    margin-top: 3rem;
-    box-shadow: var(--card-shadow);
-    border: 1px solid var(--border-color);
-  }
-  
-  .configTitle {
-    font-size: 1.5rem; /* ~24px */
-    font-weight: 600;
-    text-align: center;
-    margin-bottom: 2rem;
-  }
-  
-  .configGrid {
-    display: grid;
-    grid-template-columns: repeat(2, 1fr);
-    gap: 2rem;
-  }
-  
-  .configColumn h4 {
-    font-size: 1.1rem;
-    font-weight: 600;
-    margin-bottom: 1rem;
-    padding-bottom: 0.5rem;
-    border-bottom: 2px solid var(--border-color);
-  }
-  
-  .configColumn ul {
-    list-style: none;
-    padding: 0;
-  }
-  
-  .configColumn li {
-    display: flex;
-    align-items: flex-start;
-    gap: 0.75rem;
-    margin-bottom: 0.75rem;
-    font-size: 0.95rem;
-  }
-  .configColumn li span {
-      color: var(--text-color);
-  }
-  
-  .configColumn li svg {
-    flex-shrink: 0;
-    width: 1.2em;
-    height: 1.2em;
-    margin-top: 0.1em;
-    stroke-width: 3;
-  }
-  
-  /* Modifier colors for columns */
-  .minimal h4 { border-color: #facc15; /* Yellow-ish */ }
-  .minimal li svg { color: #facc15; }
-  
-  .optimal h4 { border-color: var(--secondary-color); /* Green */ }
-  .optimal li svg { color: var(--secondary-color); }
-  
-  /* --------------------- */
   /* --- FAQ Section --- */
-  /* --------------------- */
+  .faqSection {
+    background: var(--color-background-medium); /* Match pricing section bg */
+  }
+  
   .faqGrid {
-      /* Uses .cardGrid and .cardGrid2Cols */
+    gap: var(--spacing-md); /* Reduced gap */
+    max-width: 900px; /* Constrain width for readability */
+    margin: 0 auto;
   }
   
   .faqCard {
-      /* Uses base .card styles */
+    padding: 0;
+    background: var(--color-background-card);
+    border: 1px solid var(--color-border);
+    border-radius: var(--border-radius-medium); /* Less round */
+    overflow: hidden;
+    transition: background-color var(--transition-medium);
+  }
+  .faqCard:hover { transform: none; box-shadow: none; border-color: var(--color-border); /* No hover lift */ }
+  
+  .faqCardOpen {
+      background-color: var(--color-background-card-hover);
+      border-color: var(--color-primary); /* Highlight open FAQ */
   }
   
-  .faqCard h3 {
-      font-size: 1.15rem; /* Slightly larger than .cardTitle */
-      margin-bottom: 0.5rem;
+  .faqQuestionButton {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    width: 100%;
+    background: none;
+    border: none;
+    padding: var(--spacing-lg); /* Adjust padding */
+    text-align: left;
+    cursor: pointer;
+    color: var(--color-text-light);
+  }
+  .faqQuestionButton:focus-visible {
+      outline: 2px solid var(--color-focus-outline);
+      outline-offset: -3px; /* Inset */
+      background-color: rgba(255, 255, 255, 0.03); /* Subtle focus bg */
   }
   
-  .faqCard p {
-      color: var(--text-color-light);
-      line-height: 1.7;
+  .faqQuestionText {
+    font-size: 1.1rem; /* Adjust size */
+    font-weight: var(--font-weight-medium);
+    margin: 0;
+    padding-right: var(--spacing-md);
   }
   
-  /* -------------------------- */
-  /* --- Security Section ----- */
-  /* -------------------------- */
+  .faqIcon {
+    color: var(--color-primary);
+    flex-shrink: 0;
+    transition: transform var(--transition-medium);
+  }
+  
+  .faqAnswer {
+    max-height: 0;
+    overflow: hidden;
+    transition: max-height 0.4s ease-out, padding 0.4s ease-out; /* Smoother ease */
+    color: var(--color-text-medium);
+    padding: 0 var(--spacing-lg);
+    font-size: 0.95rem;
+  }
+  
+  .faqAnswerVisible {
+    max-height: 600px; /* Increase max height */
+    padding: 0 var(--spacing-lg) var(--spacing-lg) var(--spacing-lg);
+  }
+  .faqAnswer p { margin: 0; line-height: 1.7; }
+  
+  /* --- Sécurité Section --- */
   .securitySection {
-      /* Uses default section padding & background */
+      background: var(--color-background-dark); /* Back to dark bg */
   }
   
   .securityGrid {
-      display: grid;
-      grid-template-columns: repeat(2, 1fr);
-      gap: 3rem;
-      align-items: start; /* Align items to the top */
-  }
-  
-  .securityTextContent {
-      /* Contains Title, Subtitle, and Items List */
-  }
-  
-  .securityTextContent .sectionTitle,
-  .securityTextContent .sectionSubtitle {
-      text-align: left;
-      margin-left: 0;
-      margin-right: 0;
-  }
-  .securityTextContent .sectionSubtitle {
-      margin-bottom: 2rem; /* Specific margin from inline style */
-  }
-  
-  .securityItemsList {
-      display: flex;
-      flex-direction: column;
-      gap: 1.5rem;
+    display: flex; /* Use flex for horizontal layout */
+    flex-wrap: wrap;
+    gap: var(--spacing-lg);
+    justify-content: center;
   }
   
   .securityItem {
-      display: flex;
-      align-items: flex-start; /* Align icon with top of text */
-      gap: 1rem;
+    display: flex;
+    align-items: center;
+    gap: var(--spacing-sm);
+    padding: var(--spacing-sm) var(--spacing-md); /* Less padding */
+    background: transparent; /* No card background */
+    border-radius: var(--border-radius-medium);
+    transition: color var(--transition-fast);
+    color: var(--color-text-dark); /* Darker text */
+    font-weight: var(--font-weight-medium);
+    flex: 0 1 auto; /* Allow shrinking but not growing */
+  }
+  .securityItem .iconAnimated {
+      width: 20px;
+      height: 20px;
+      color: var(--color-primary);
+  }
+  .securityItem:hover {
+    transform: none; /* No lift */
+    background: transparent;
+    color: var(--color-text-light); /* Brighten text on hover */
   }
   
-  .securityItem .securityIconWrapper {
-      margin-bottom: 0; /* Remove default margin */
-      flex-shrink: 0; /* Prevent icon wrapper from shrinking */
-  }
-  /* Specific icon styling */
-  .greenCheck {
-      color: var(--secondary-color) !important; /* Force green */
-  }
-  .securityIconWrapper .greenCheck {
-       background-color: rgba(16, 185, 129, 0.1); /* Light green background */
-  }
-  
-  .securityItem h3 {
-      font-size: 1.1rem;
-      font-weight: 600;
-      margin-bottom: 0.25rem;
-  }
-  
-  .securityItem p {
-      font-size: 0.95rem;
-      color: var(--text-color-light);
-  }
-  
-  .trustBox {
-      background-color: var(--bg-color);
-      border-radius: var(--border-radius);
-      padding: 2rem;
-      box-shadow: var(--card-shadow);
-      border: 1px solid var(--border-color);
-  }
-  
-  .trustBoxTitle {
-      font-size: 1.25rem;
-      font-weight: 600;
-      margin-bottom: 1.5rem;
-      text-align: center;
-  }
-  
-  .trustList {
-      /* Container for the list items */
-  }
-  
-  .trustListItem {
-      display: flex;
-      align-items: center;
-      gap: 0.75rem;
-      margin-bottom: 0.75rem;
-      font-size: 0.95rem;
-  }
-  .trustListItem span {
-      color: var(--text-color);
-  }
-  
-  .trustListItem svg {
-      flex-shrink: 0;
-      width: 1.2em;
-      height: 1.2em;
-      color: var(--secondary-color);
-      stroke-width: 3;
-  }
-  
-  /* --------------------- */
   /* --- CTA Section --- */
-  /* --------------------- */
   .ctaSection {
-    background: linear-gradient(to right, var(--primary-color), var(--primary-color-dark));
-    color: white;
+    background: var(--color-background-cta); /* Use specific dark CTA bg */
+    /* Or use a background image/video */
+    /* background: linear-gradient(rgba(0,0,0,0.6), rgba(0,0,0,0.6)), url(...) center/cover; */
+    padding: var(--spacing-section) 0;
     text-align: center;
-    padding: 4rem 0;
+    position: relative;
+    overflow: hidden;
   }
   
-  .ctaContainer {
-      /* Uses base .container */
-  }
+  /* Remove pulse glow effect */
+  .ctaSection::before {
+     /* content: ''; */
+     /* position: absolute; */
+     /* ... remove or replace with subtle texture/gradient */
+     /* background: radial-gradient(circle, rgba(var(--color-primary-rgb), 0.05), transparent 70%); */
+     /* animation: subtlePulse 10s infinite linear; */
+     display: none; /* Hide the pulse */
+   }
+  
+  .ctaContainer { position: relative; z-index: 1; }
   
   .ctaTitle {
-    font-size: 2rem; /* ~32px */
-    font-weight: 700;
-    margin-bottom: 1rem;
+    font-size: clamp(2.5rem, 5.5vw, 3.5rem);
+    font-weight: var(--font-weight-bold);
+    margin-bottom: var(--spacing-md);
+    color: var(--color-text-light);
+    /* Animation */
   }
   
   .ctaSubtitle {
-    font-size: 1.1rem;
-    opacity: 0.9;
-    max-width: 600px;
-    margin: 0 auto 2rem auto;
+    font-size: clamp(1.1rem, 2vw, 1.4rem);
+    color: var(--color-text-medium);
+    margin-bottom: var(--spacing-xxl); /* More space */
+    max-width: 650px;
+    margin-left: auto;
+    margin-right: auto;
+    /* Animation */
   }
   
   .ctaButton {
-    display: inline-flex;
-    align-items: center;
-    gap: 0.75rem;
-    background-color: white;
-    color: var(--primary-color);
-    padding: 0.8rem 1.8rem;
-    border: none;
-    border-radius: var(--border-radius);
-    font-size: 1.1rem;
-    font-weight: 600;
-    cursor: pointer;
-    transition: transform 0.2s ease-in-out, box-shadow 0.2s ease-in-out;
-    box-shadow: 0 4px 10px rgba(0,0,0,0.1);
+    font-size: 1.1rem; /* Adjust size */
+    padding: var(--spacing-lg) var(--spacing-xxl);
+    /* Animation */
   }
   
-  .ctaButton:hover {
-    transform: translateY(-3px);
-     box-shadow: 0 6px 15px rgba(0,0,0,0.15);
-  }
-  
-  .ctaButton svg {
-    width: 1.3em;
-    height: 1.3em;
-  }
-  
-  
-  /* --------------------- */
   /* --- Footer --- */
-  /* --------------------- */
   .footer {
-    background-color: var(--text-color); /* Dark background */
-    color: #d1d5db; /* Light gray text */
-    padding: 4rem 0 2rem 0;
-    font-size: 0.9rem;
+    background: var(--color-background-dark); /* Match main dark bg */
+    padding: var(--spacing-xxl) 0 var(--spacing-lg); /* Adjust padding */
+    border-top: 1px solid var(--color-border);
+    color: var(--color-text-dark); /* Default footer text darker */
   }
   
   .footerGrid {
     display: grid;
-    grid-template-columns: repeat(4, 1fr); /* 4 columns */
-    gap: 2rem;
-    margin-bottom: 3rem;
+    grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+    gap: var(--spacing-xxl); /* Increase gap */
+    margin-bottom: var(--spacing-xl);
+  }
+  
+  .footerLogoLink {
+      display: inline-block;
+      margin-bottom: var(--spacing-md);
+      text-decoration: none;
+  }
+  .footerLogoLink:focus-visible {
+      outline: 2px solid var(--color-focus-outline);
+      outline-offset: 2px;
+      border-radius: var(--border-radius-small);
   }
   
   .footerLogo {
-    display: inline-block;
-    font-size: 1.5rem;
-    font-weight: 700;
-    color: white;
-    margin-bottom: 1rem;
+    font-size: 1.5rem; /* Smaller footer logo */
+    font-weight: var(--font-weight-bold);
+    color: var(--color-text-light);
     cursor: pointer;
+    transition: color var(--transition-fast);
   }
+  .footerLogoLink:hover .footerLogo { color: var(--color-text-medium); }
+  .footerLogo span { color: var(--color-primary); }
   
-  .footerLogo span {
-    color: var(--primary-color);
-  }
-  
-  .footer p {
-    line-height: 1.7;
+  .footerDescription {
+      font-size: 0.9rem;
+      margin: 0;
+      line-height: 1.6;
   }
   
   .footerHeading {
-    font-size: 1.1rem;
-    font-weight: 600;
-    color: white;
-    margin-bottom: 1rem;
+    font-size: 1.1rem; /* Smaller heading */
+    font-weight: var(--font-weight-semibold);
+    margin-bottom: var(--spacing-lg);
+    color: var(--color-text-light);
+    text-transform: uppercase; /* Uppercase footer headings */
+    letter-spacing: 0.05em;
   }
   
-  .footer ul {
-    list-style: none;
-    padding: 0;
+  .footerLinksList { list-style: none; padding: 0; margin: 0; }
+  .footerLinksList li { margin-bottom: var(--spacing-sm); }
+  .footerLinksList a {
+    background: none; border: none;
+    color: var(--color-text-dark);
+    font-size: 0.95rem;
+    cursor: pointer; text-decoration: none;
+    transition: color var(--transition-medium);
+    display: inline-block;
+  }
+  .footerLinksList a:hover { color: var(--color-primary); }
+  .footerLinksList a:focus-visible {
+      outline: 2px solid var(--color-focus-outline);
+      outline-offset: 2px;
+      border-radius: var(--border-radius-small);
+      color: var(--color-primary);
   }
   
-  .footer li {
-    margin-bottom: 0.6rem;
+  .whatsappButtonFooter {
+      padding: var(--spacing-sm) var(--spacing-md);
+      font-size: 0.9rem;
   }
-  
-  /* Style buttons in footer lists like links */
-  .footer ul button {
-    background: none;
-    border: none;
-    padding: 0;
-    color: #d1d5db; /* Light gray */
-    cursor: pointer;
-    text-align: left;
-    font-size: 0.9rem;
-    transition: color 0.2s ease-in-out;
-  }
-  
-  .footer ul button:hover {
-    color: white;
-    text-decoration: underline;
-  }
-  
-  .disabledLink {
-    color: #9ca3af; /* Medium Gray */
-    cursor: default;
-    font-size: 0.9rem;
-  }
-  
-  /* Specific styling for Contact column */
-  .footerContact {
-      /* May need specific adjustments */
-  }
-  
-  .footerWhatsappButton {
-    /* Inherits .whatsappButton styles, override as needed */
-    background-color: var(--secondary-color);
-    color: white;
-    width: 100%; /* Make button full width in its column */
-    justify-content: center; /* Center text and icon */
-    margin-bottom: 0.5rem;
-    padding: 0.7rem 1rem; /* Adjust padding if needed */
-  }
-  .footerWhatsappButton svg {
-      width: 1.2em;
-      height: 1.2em;
-      fill: white; /* Ensure SVG fill is white */
-  }
-  
-  .footerContact p {
-      text-align: center;
-      font-size: 0.85rem;
-      color: #9ca3af;
-  }
-  
   
   .footerBottom {
-    border-top: 1px solid #4b5563; /* Darker border */
-    padding-top: 2rem;
-    margin-top: 2rem; /* Space above bottom section */
     text-align: center;
+    margin-top: var(--spacing-xxl); /* More space */
+    padding-top: var(--spacing-lg);
+    border-top: 1px solid var(--color-border);
     font-size: 0.85rem;
-    color: #9ca3af; /* Medium Gray */
+    color: var(--color-text-dark);
+  }
+  .footerBottom p { margin: 0; }
+  
+  /* --- Responsive Design (Adjustments might be needed based on new style) --- */
+  @media (max-width: 1024px) {
+    .container { padding: 0 var(--spacing-lg); }
+    .heroContent { max-width: 80%; }
+    .navigation { gap: var(--spacing-md); }
+    .cardGrid2Cols { grid-template-columns: repeat(auto-fit, minmax(400px, 1fr)); } /* Adjust breakpoints */
+    .faqGrid { max-width: 100%; } /* Remove max-width on smaller screens */
   }
   
-  .footerBottom p:last-child {
-      margin-top: 0.5rem;
-      font-style: italic;
-      opacity: 0.8;
-  }
+  @media (max-width: 768px) {
+    .stickyHeader { height: auto; padding: var(--spacing-md) 0; }
+    .header .container { flex-direction: column; gap: var(--spacing-md); }
+    .navigation { order: 3; }
+    .headerContactButton { order: 2; }
+    .logoLink { order: 1; }
   
-  
-  /* --------------------- */
-  /* --- Responsiveness --- */
-  /* --------------------- */
-  
-  /* Medium Screens (Tablets) */
-  @media (max-width: 992px) {
-    .container { width: 95%; }
-    .heroContainer { flex-direction: column; text-align: center; }
-    .heroImage { margin-top: 2rem; }
-    .heroTitle { font-size: 2.5rem; }
-    .heroSubtitle { max-width: none; }
+    .heroContent { max-width: 100%; text-align: center; }
     .heroButtons { justify-content: center; }
   
-    .cardGrid3Cols { grid-template-columns: repeat(2, 1fr); }
-    .cardGrid2Cols { grid-template-columns: 1fr; } /* FAQ cards stack */
-    .deviceGrid { grid-template-columns: repeat(auto-fit, minmax(130px, 1fr)); gap: 1.5rem;}
-  
-    .configGrid { grid-template-columns: 1fr; }
-    .securityGrid { grid-template-columns: 1fr; gap: 2rem; }
-    .trustBox { margin-top: 2rem; } /* Add space when stacked */
-  
-    .footerGrid { grid-template-columns: repeat(2, 1fr); } /* 2x2 grid */
+    .deviceGrid { grid-template-columns: repeat(auto-fit, minmax(150px, 1fr)); } /* Smaller items */
+    .footerGrid { grid-template-columns: 1fr; text-align: center; gap: var(--spacing-xl); }
+    .securityGrid { gap: var(--spacing-md); }
   }
   
-  /* Small Screens (Mobiles) */
-  @media (max-width: 768px) {
-    :root { --header-height: 60px; }
-    .header .container { flex-wrap: wrap; /* Allow header items to wrap */ justify-content: center; }
-    .navigation { order: 3; width: 100%; justify-content: center; margin-top: 0.5rem; gap: 0.2rem;} /* Move nav below logo/button */
-    .navButton { padding: 0.4rem 0.6rem; font-size: 0.9rem; }
-    .whatsappButton { font-size: 0.9rem; padding: 0.5rem 1rem; }
-  
-    .heroSection { padding: 4rem 0; }
-    .heroTitle { font-size: 2rem; }
+  @media (max-width: 480px) {
+    .container { padding: 0 var(--spacing-md); }
+    .heroTitle { font-size: 2.2rem; }
     .heroSubtitle { font-size: 1rem; }
-  
-    .sectionTitle { font-size: 1.8rem; }
-    .sectionSubtitle { font-size: 1rem; }
-  
-    .cardGrid3Cols { grid-template-columns: 1fr; } /* Stack all cards */
-    .card { padding: 1.5rem; }
-  
-    .deviceGrid { grid-template-columns: repeat(2, 1fr); gap: 1rem;} /* Keep 2 cols for icons */
-    .deviceIconWrapper svg { width: 28px; height: 28px; }
-  
-    .footerGrid { grid-template-columns: 1fr; text-align: center; } /* Stack all footer columns */
-    .footer ul button { text-align: center; }
-    .footerContact p { text-align: center; }
-    .footerLogo { margin-left: auto; margin-right: auto; }
-  
+    .sectionTitle { font-size: 1.9rem; }
+    .cardGrid3Cols, .cardGrid2Cols { grid-template-columns: 1fr; }
+    .gradientButton, .secondaryButtonHero { font-size: 0.95rem; }
+    .ctaButton { font-size: 1rem; padding: var(--spacing-md) var(--spacing-lg); }
+    .deviceGrid { grid-template-columns: repeat(2, 1fr); } /* Keep 2 columns */
+    .deviceName { font-size: 1rem; }
+    .footer { padding: var(--spacing-xl) 0 var(--spacing-md); }
   }
+  /* Keyframes for the hero image animation */

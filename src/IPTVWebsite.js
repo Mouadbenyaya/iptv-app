@@ -1,32 +1,105 @@
-import React, { useState, useEffect } from 'react';
-import { ArrowRight, Check, Monitor, Smartphone, Tablet, Tv, Wifi, Shield, Headphones } from 'lucide-react';
-// Importation du fichier CSS Module (ESSENTIEL)
-import styles from './IPTVWebsite.module.css';
+import React, { useState, useEffect, useRef, useCallback } from 'react';
+import { ArrowRight, Check, Monitor, Smartphone, Tablet, Tv, Wifi, Shield, Headphones, ChevronDown, ChevronUp } from 'lucide-react';
+import styles from './IPTVWebsite.module.css'; // Assuming you update this CSS file
+import coverImage from './/images/mobile-device.png';
 
-const IPTVWebsite = () => {
-  const [activeTab, setActiveTab] = useState('accueil');
 
-  // Gestion du défilement fluide vers les sections
-  const scrollToSection = (sectionId) => {
-    const element = document.getElementById(sectionId);
-    if (element) {
-      element.scrollIntoView({ behavior: 'smooth', block: 'start' });
-    }
-  };
+// --- Data (Consider moving to a separate file for larger apps) ---
 
-  // Redirection vers WhatsApp
-  const handleWhatsAppContact = () => {
-    window.open('https://wa.me/+0123456789', '_blank'); // Remplacez par votre vrai numéro
-  };
+const navItems = [
+  { id: 'accueil', label: 'Accueil' },
+  { id: 'services', label: 'Services' },
+  { id: 'abonnements', label: 'Abonnements' },
+  { id: 'appareils', label: 'Appareils' },
+  { id: 'faq', label: 'FAQ' },
+  { id: 'securite', label: 'Securite' },
+  // { id: 'testimonials', label: 'Avis' }, // Consider adding a Testimonials section
+  { id: 'cta', label: 'Commencer' },
+];
 
-  // Suivi de la section active au scroll
+const servicesData = [
+  {
+    icon: Tv,
+    title: 'TV en Direct Premium',
+    description: 'Accédez à +10,000 chaînes mondiales en HD/4K – Ne manquez aucun match !',
+    features: ['Sports en direct (Foot, Basket, F1...)', 'Films & Séries (US, FR, AR...)', 'Actualités Mondiales', 'Documentaires Captivants', 'Chaînes Internationales'],
+  },
+  {
+    icon: Monitor,
+    title: 'VOD Illimitée & Récente',
+    description: 'Bibliothèque VOD massive mise à jour quotidiennement.',
+    features: ['Derniers Films Blockbusters', 'Séries Complètes (Saisons à jour)', 'Contenu Enfants Sécurisé', 'Documentaires Exclusifs', 'Zéro Publicité Intrusive'],
+  },
+  {
+    icon: Wifi,
+    title: 'Streaming Ultra-Fluide',
+    description: 'Serveurs dédiés haute performance pour un visionnage sans coupure.',
+    features: ['Technologie Anti-freeze Avancée', 'Qualité Stable HD/4K/8K', 'Latence Minimale (Idéal Sport)', 'Serveurs Européens & Mondiaux', 'Support Technique Réactif 24/7'],
+  },
+];
+
+const pricingData = [
+  {
+    title: 'Formule Essentiel',
+    description: 'Idéal pour découvrir',
+    price: '19,99€',
+    period: '/mois',
+    features: ['5,000+ chaînes', 'Qualité HD', '2 connexions simultanées', 'VOD basique', 'Support Email'],
+    popular: false,
+  },
+  {
+    title: 'Formule Premium',
+    description: 'Le choix préféré pour le Sport & Divertissement',
+    price: '29,99€',
+    period: '/mois',
+    features: ['10,000+ chaînes', 'Qualité HD & 4K', '4 connexions simultanées', 'VOD complète & à jour', 'Support Prioritaire 24/7'],
+    popular: true,
+    badge: 'Meilleure Offre',
+  },
+  {
+    title: 'Formule Famille Max',
+    description: 'Pour toute la maison, sur tous les écrans',
+    price: '39,99€',
+    period: '/mois',
+    features: ['10,000+ chaînes', 'Qualité HD & 4K/8K', '6 connexions simultanées', 'VOD complète & à jour', 'Support Prioritaire 24/7', 'Contrôle parental facile'],
+    popular: false,
+  },
+];
+
+const devicesData = [
+    { icon: Smartphone, name: 'Smartphones', desc: 'iOS & Android (Apps dédiées)' },
+    { icon: Tablet, name: 'Tablettes', desc: 'iPad & Tablettes Android' },
+    { icon: Tv, name: 'Smart TV', desc: 'Samsung, LG, Sony, Philips...' },
+    { icon: Monitor, name: 'Box TV & Clés', desc: 'Android Box, Fire Stick, Apple TV...' },
+    // { icon: Computer, name: 'Ordinateurs', desc: 'Windows, macOS, Linux (Web Player/Apps)' }, // Example: Add more if needed
+];
+
+const faqData = [
+  { q: "Qu'est-ce que l'IPTV exactement ?", a: "C'est la télévision diffusée via votre connexion Internet au lieu du câble ou satellite traditionnel. Cela offre plus de flexibilité, un plus grand choix de chaînes et souvent une meilleure qualité d'image." },
+  { q: "Est-ce compliqué à installer ?", a: "Pas du tout ! Après l'abonnement, vous recevez des identifiants (ou un lien/fichier). Il suffit de les entrer dans une application IPTV compatible sur votre appareil (nous vous guidons !)." },
+  { q: "Sur combien d'appareils puis-je regarder en même temps ?", a: "Cela dépend de votre formule : Essentiel (2 appareils), Premium (4 appareils), Famille Max (6 appareils) simultanément." },
+  { q: "La qualité d'image est-elle toujours bonne ?", a: "Nous utilisons des serveurs très performants pour garantir la meilleure qualité possible (HD/4K/8K selon la chaîne). Cependant, une connexion Internet stable et rapide (15 Mbps+ recommandé pour la 4K) est essentielle de votre côté." },
+  { q: "Est-ce légal et sûr ?", a: "Nous opérons dans le respect des réglementations applicables à nos services. Vos connexions sont sécurisées et vos données personnelles protégées. Nous recommandons l'utilisation d'un VPN pour une confidentialité maximale, bien que ce ne soit pas obligatoire avec notre service." },
+];
+
+const securityFeatures = [
+    { icon: Shield, text: 'Connexions Chiffrées' },
+    { icon: Check, text: 'Protection des Données' },
+    { icon: Headphones, text: 'Support Client Discret' },
+    // { icon: Lock, text: 'Paiements Sécurisés' } // Add if applicable
+];
+
+// --- Helper Hook for Intersection Observer ---
+const useIntersectionObserver = (setActiveTab) => {
+  const observerRef = useRef(null);
+
   useEffect(() => {
-    const sections = document.querySelectorAll('section[id]');
     const observerOptions = {
-      root: null,
+      root: null, // viewport
       rootMargin: '0px',
-      threshold: 0.4,
+      threshold: 0.4, // 40% of section visible
     };
+
     const observerCallback = (entries) => {
       entries.forEach((entry) => {
         if (entry.isIntersecting) {
@@ -34,12 +107,59 @@ const IPTVWebsite = () => {
         }
       });
     };
-    const observer = new IntersectionObserver(observerCallback, observerOptions);
-    sections.forEach((section) => observer.observe(section));
-    return () => sections.forEach((section) => observer.unobserve(section));
-  }, []);
 
-  // Appliquer scroll-smooth globalement via JS (peut aussi être dans CSS global)
+    observerRef.current = new IntersectionObserver(observerCallback, observerOptions);
+    const currentObserver = observerRef.current; // Capture ref value
+
+    const sections = document.querySelectorAll('section[id]');
+    sections.forEach((section) => currentObserver.observe(section));
+
+    return () => {
+      sections.forEach((section) => currentObserver.unobserve(section));
+    };
+  }, [setActiveTab]);
+};
+
+
+// --- FAQ Item Component ---
+const FaqItem = ({ q, a, index }) => {
+    const [isOpen, setIsOpen] = useState(false);
+
+    return (
+        <div className={`${styles.card} ${styles.faqCard} ${isOpen ? styles.faqCardOpen : ''}`}>
+            {/* CSS: Style .faqCardOpen differently, maybe border color */}
+            <button
+                className={styles.faqQuestionButton}
+                onClick={() => setIsOpen(!isOpen)}
+                aria-expanded={isOpen}
+                aria-controls={`faq-answer-${index}`}
+                /* CSS: Style this button: width 100%, text-align left, add icon positioning */
+            >
+                <h3 className={styles.faqQuestionText}>{q}</h3>
+                <span className={styles.faqIcon}>
+                    {/* CSS: Style this span to position the icon */}
+                    {isOpen ? <ChevronUp /> : <ChevronDown />}
+                </span>
+            </button>
+            <div
+                id={`faq-answer-${index}`}
+                className={`${styles.faqAnswer} ${isOpen ? styles.faqAnswerVisible : ''}`}
+                /* CSS: Use max-height transition for smooth open/close. Style .faqAnswerVisible */
+            >
+                <p>{a}</p>
+            </div>
+        </div>
+    );
+};
+
+
+// --- Main Component ---
+const IPTVWebsite = () => {
+  const [activeTab, setActiveTab] = useState(navItems[0].id);
+  // Maybe add state for modal visibility if implementing forms/modals
+  // const [isContactModalOpen, setIsContactModalOpen] = useState(false);
+
+  // Smooth Scrolling Setup
   useEffect(() => {
     document.documentElement.style.scrollBehavior = 'smooth';
     return () => {
@@ -47,376 +167,383 @@ const IPTVWebsite = () => {
     };
   }, []);
 
+  // Intersection Observer Hook
+  useIntersectionObserver(setActiveTab);
+
+  // Scroll Function
+  const scrollToSection = useCallback((sectionId) => {
+    const element = document.getElementById(sectionId);
+    if (element) {
+        // Calculate offset if header is sticky and opaque
+        const headerOffset = document.querySelector(`.${styles.stickyHeader}`)?.offsetHeight || 80; // Adjust offset as needed
+        const elementPosition = element.getBoundingClientRect().top;
+        const offsetPosition = elementPosition + window.pageYOffset - headerOffset;
+
+        window.scrollTo({
+            top: offsetPosition,
+            behavior: 'smooth'
+        });
+        // Manually set active tab for faster feedback, observer will correct if needed
+        setActiveTab(sectionId);
+    }
+  }, []); // Empty dependency array is fine if styles.stickyHeader height is consistent
+
+  // WhatsApp Handler
+  const handleWhatsAppContact = (message = '') => {
+    // Replace with your actual WhatsApp number
+    const whatsappNumber = '+0123456789';
+    const encodedMessage = encodeURIComponent(message || "Bonjour ! Je suis intéressé par vos services IPTV.");
+    const url = `https://wa.me/${whatsappNumber}?text=${encodedMessage}`;
+    // Add rel="noopener noreferrer" for security
+    window.open(url, '_blank', 'noopener,noreferrer');
+  };
+
+  // --- Render ---
   return (
-    // Utilisation de la classe principale du module CSS
     <div className={styles.iptvWebsiteWrapper}>
-      {/* Barre de navigation */}
-      <header className={styles.header}>
-        {/* Utilisation de la classe container du module */}
+      {/* Header */}
+      <header className={`${styles.header} ${styles.stickyHeader}`}>
+        {/* CSS: Ensure this header has a consistent height for scroll offset calculation */}
         <div className={styles.container}>
-          {/* Logo */}
-          <div className={styles.logoLink} onClick={() => scrollToSection('accueil')}>
+          {/* Logo - Make it a link to home/top */}
+          <a
+             href="#accueil"
+             className={styles.logoLink}
+             onClick={(e) => { e.preventDefault(); scrollToSection('accueil'); }}
+             aria-label="IPTV Vision Home"
+             /* CSS: Add focus-visible styles */
+            >
             <div className={styles.logoText}>
               IPTV<span className={styles.logoTextSpan}>Vision</span>
             </div>
-          </div>
+          </a>
 
           {/* Navigation */}
-          <nav className={styles.navigation}>
-            {['accueil', 'services', 'abonnements', 'appareils', 'faq'].map((tabId) => (
-              <button
-                key={tabId}
-                onClick={() => scrollToSection(tabId)}
-                // Combinaison de la classe de base et de la classe active conditionnelle
-                className={`${styles.navButton} ${activeTab === tabId ? styles.active : ''}`}
+          <nav className={styles.navigation} aria-label="Main Navigation">
+            {navItems.map((item) => (
+              <a
+                key={item.id}
+                href={`#${item.id}`}
+                onClick={(e) => {
+                   e.preventDefault();
+                   scrollToSection(item.id);
+                }}
+                className={`${styles.navButton} ${activeTab === item.id ? styles.active : ''}`}
+                aria-current={activeTab === item.id ? 'page' : undefined} // Accessibility!
+                /* CSS: Add focus-visible styles */
               >
-                {tabId.charAt(0).toUpperCase() + tabId.slice(1)}
-              </button>
+                {item.label}
+              </a>
             ))}
           </nav>
 
-          {/* Bouton WhatsApp */}
-          <button onClick={handleWhatsAppContact} className={styles.whatsappButton}>
-            <span>Contact WhatsApp</span>
-            <ArrowRight className={styles.buttonIcon} /> {/* Classe optionnelle pour l'icône */}
+          {/* Header Contact Button */}
+          <button
+            onClick={() => handleWhatsAppContact()}
+            className={`${styles.headerContactButton} ${styles.gradientButton}`}
+            /* CSS: Add focus-visible styles. Maybe differentiate slightly from body buttons */
+          >
+            <span>Contact Rapide</span>
+            <ArrowRight className={styles.buttonIcon} />
           </button>
         </div>
       </header>
 
-      {/* Section d'accueil Hero */}
-      <section id="accueil" className={styles.heroSection}>
-        <div className={`${styles.container} ${styles.heroContainer}`}> {/* Classe modificateur pour hero */}
-          <div className={styles.heroContent}>
-            <h1 className={styles.heroTitle}>Des services IPTV de qualité supérieure</h1>
-            <p className={styles.heroSubtitle}>Accédez à des milliers de chaînes TV et du contenu VOD avec notre service IPTV premium, stable et fiable.</p>
-            <div className={styles.heroButtons}>
-              <button onClick={() => scrollToSection('abonnements')} className={styles.offersButton}>
-                Voir nos offres
-              </button>
-              <button onClick={handleWhatsAppContact} className={`${styles.whatsappButton} ${styles.whatsappHeroButton}`}> {/* Modificateur pour hero */}
-                Contact WhatsApp
-                <ArrowRight className={styles.buttonIcon} />
-              </button>
+      {/* Main Content */}
+      <main>
+        {/* Hero Section */}
+        <section id="accueil" className={styles.heroSection} aria-labelledby="hero-title">
+  <div className={`${styles.container} ${styles.heroContainer}`}> {/* This container will become a flex container */}
+
+    {/* Left Column: Text Content (Existing Code) */}
+    <div className={styles.heroContent}>
+      <h1 id="hero-title" className={styles.heroTitle}>
+        L'Expérience IPTV Ultime: Stable, Rapide, Complet
+      </h1>
+      <p className={styles.heroSubtitle}>
+        +10,000 Chaînes Live, VOD à Jour, Qualité 4K/8K. Foot, Films, Séries - Ne Manquez Plus Rien !
+      </p>
+      <div className={styles.heroButtons}>
+        <button
+            onClick={() => scrollToSection('abonnements')}
+            className={`${styles.ctaButtonHero} ${styles.gradientButton}`}
+            >
+          Voir les Formules
+        </button>
+        <button
+          onClick={() => handleWhatsAppContact("Bonjour, je suis intéressé par un essai gratuit.")}
+          className={`${styles.secondaryButtonHero}`}
+        >
+          Demander un Essai Gratuit <ArrowRight className={styles.buttonIcon} />
+        </button>
+      </div>
+      {/* Optional: Trust Signals Placeholder */}
+      {/* <div className={styles.heroTrustBadges}>...</div> */}
+    </div>
+
+    {/* Right Column: Image Container (NEW CODE) */}
+    <div className={styles.heroImageContainer}>
+      <img
+        // --- IMPORTANT: Replace with the actual path to YOUR image ---
+          src={coverImage}  
+        // --- IMPORTANT: Add descriptive alt text for accessibility ---
+        alt="Illustration showing IPTV service on multiple devices"
+        className={styles.heroImage}
+        loading="lazy" // Improves performance
+      />
+    </div>
+
+  </div>
+</section>
+
+
+        {/* Services Section */}
+        <section id="services" className={styles.servicesSection} aria-labelledby="services-title">
+          <div className={styles.container}>
+            <div className={`${styles.sectionHeading}`}>
+              {/* CSS: Animate this heading on scroll */}
+              <h2 id="services-title" className={styles.sectionTitle}>Pourquoi Choisir IPTV Vision ?</h2>
+              <p className={styles.sectionSubtitle}>Plus qu'un simple abonnement, une véritable expérience.</p>
+            </div>
+            <div className={`${styles.cardGrid} ${styles.cardGrid3Cols}`}>
+              {/* CSS: Apply staggered entrance animations to cards */}
+              {servicesData.map((service, index) => {
+                 const IconComponent = service.icon;
+                 return (
+                    <div key={index} className={`${styles.card} ${styles.serviceCard}`}>
+                         {/* CSS: Add enhanced hover effects */}
+                        <div className={styles.cardIcon}>
+                           <IconComponent className={styles.iconAnimated} aria-hidden="true" />
+                        </div>
+                        <h3 className={styles.cardTitle}>{service.title}</h3>
+                        <p className={styles.cardDescription}>{service.description}</p>
+                        <ul className={styles.featureList}>
+                           {service.features.map((feature, fIndex) => (
+                              <li key={fIndex}>
+                                 <Check aria-hidden="true" className={styles.featureIcon} />
+                                 <span>{feature}</span>
+                              </li>
+                           ))}
+                        </ul>
+                    </div>
+                 );
+              })}
             </div>
           </div>
-          <div className={styles.heroImage}>
-            <Tv className={styles.heroIcon} />
+        </section>
+
+        {/* Abonnements Section */}
+        <section id="abonnements" className={styles.abonnementsSection} aria-labelledby="abonnements-title">
+          <div className={styles.container}>
+            <div className={`${styles.sectionHeading}`}>
+              <h2 id="abonnements-title" className={styles.sectionTitle}>Nos Formules d'Abonnement</h2>
+              <p className={styles.sectionSubtitle}>Transparent, Flexible, Adapté à vos besoins.</p>
+              {/* Consider adding a Monthly/Annual toggle switch here */}
+            </div>
+            <div className={`${styles.cardGrid} ${styles.cardGrid3Cols} ${styles.itemsStretch}`}>
+              {/* CSS: Apply staggered entrance animations to cards */}
+              {pricingData.map((plan, index) => (
+                <div key={index} className={`${styles.card} ${styles.pricingCard} ${plan.popular ? styles.popular : ''}`}>
+                   {/* CSS: Enhance hover effect, esp. on popular plan */}
+                   {plan.popular && <div className={styles.popularBadge}>{plan.badge || 'Populaire'}</div>}
+                  <h3 className={styles.cardTitle}>{plan.title}</h3>
+                  <p className={styles.cardDescription}>{plan.description}</p>
+                  <div className={styles.price}>
+                     {plan.price} <span>{plan.period}</span>
+                     {/* Maybe add small print like "TTC" or "Sans engagement" */}
+                  </div>
+                   <ul className={styles.featureList}>
+                     {plan.features.map((feature, fIndex) => (
+                        <li key={fIndex}>
+                           <Check aria-hidden="true" className={styles.featureIcon} />
+                           <span>{feature}</span>
+                           {/* Consider adding info tooltips for complex features */}
+                        </li>
+                     ))}
+                  </ul>
+                  {/* Consider a modal confirmation before WhatsApp */}
+                  <button
+                    onClick={() => handleWhatsAppContact(`Bonjour, je souhaite commander la ${plan.title}.`)}
+                    className={`${styles.orderButton} ${styles.gradientButton}`}
+                    /* CSS: Add focus-visible styles */
+                    >
+                    Commander Maintenant
+                  </button>
+                </div>
+              ))}
+            </div>
+            {/* Add comparison table link/button? */}
+            {/* <div className={styles.comparisonLinkWrapper}> */}
+            {/* <button>Comparer les plans en détail</button> */}
+            {/* </div> */}
           </div>
-        </div>
-      </section>
+        </section>
 
-      {/* Section des services */}
-      <section id="services" className={styles.servicesSection}>
-        <div className={styles.container}>
-          <div className={styles.sectionHeading}>
-            <h2 className={styles.sectionTitle}>Nos Services IPTV</h2>
-            <p className={styles.sectionSubtitle}>Découvrez notre gamme complète de services offrant une expérience télévisuelle de haute qualité.</p>
+        {/* Appareils Section */}
+        <section id="appareils" className={styles.appareilsSection} aria-labelledby="appareils-title">
+          <div className={styles.container}>
+            <div className={`${styles.sectionHeading}`}>
+              <h2 id="appareils-title" className={styles.sectionTitle}>Compatible Partout</h2>
+              <p className={styles.sectionSubtitle}>Regardez sur vos appareils préférés, sans tracas.</p>
+            </div>
+            <div className={styles.deviceGrid}>
+               {/* CSS: Apply staggered entrance animations to items */}
+               {devicesData.map((device, index) => {
+                  const IconComponent = device.icon;
+                  // Apply stagger delay using inline style (can also be done via CSS nth-child if static)
+                  // Requires corresponding animation-delay in CSS: animation-delay: calc(0.1s * var(--i));
+                  const style = { '--i': index + 1 };
+                  return (
+                    <div key={index} className={styles.deviceItem} style={style}>
+                        <div className={styles.deviceIconWrapper}>
+                           <IconComponent className={styles.iconAnimated} aria-hidden="true" />
+                        </div>
+                        <h3 className={styles.deviceName}>{device.name}</h3>
+                        <p className={styles.deviceDesc}>{device.desc}</p>
+                    </div>
+                  );
+               })}
+            </div>
+            {/* <div className={styles.setupGuideLink}> */}
+            {/* <button>Voir les guides d'installation</button> */}
+            {/* </div> */}
           </div>
+        </section>
 
-          <div className={`${styles.cardGrid} ${styles.cardGrid3Cols}`}> {/* Grille à 3 colonnes */}
-            {/* Carte Service 1 */}
-            <div className={`${styles.card} ${styles.serviceCard}`}> {/* Classe de base + spécifique */}
-              <div className={styles.cardIcon}>
-                <Tv /> {/* Les dimensions seront définies dans CSS */}
-              </div>
-              <h3 className={styles.cardTitle}>TV en Direct</h3> {/* Classe optionnelle */}
-              <p>Accédez à +10,000 chaînes mondiales en HD/4K.</p>
-              <ul>
-                {['Sports', 'Films', 'Séries', 'Documentaires', 'International'].map((item, index) => (
-                  <li key={index}>
-                    <Check /> {/* Style via .card li svg */}
-                    {item}
-                  </li>
-                ))}
-              </ul>
+        {/* FAQ Section */}
+        <section id="faq" className={styles.faqSection} aria-labelledby="faq-title">
+            <div className={styles.container}>
+                <div className={`${styles.sectionHeading}`}>
+                    <h2 id="faq-title" className={styles.sectionTitle}>Questions Fréquentes (FAQ)</h2>
+                    <p className={styles.sectionSubtitle}>Vos réponses, claires et directes.</p>
+                </div>
+                <div className={`${styles.faqGrid}`}>
+                    {/* CSS: Maybe use 1 column on mobile, 2 on desktop */}
+                    {faqData.map((item, index) => (
+                        <FaqItem key={index} q={item.q} a={item.a} index={index} />
+                    ))}
+                </div>
             </div>
+        </section>
 
-            {/* Carte Service 2 */}
-            <div className={`${styles.card} ${styles.serviceCard}`}>
-               <div className={styles.cardIcon}>
-                 <Monitor />
-               </div>
-               <h3 className={styles.cardTitle}>VOD Premium</h3>
-               <p>Bibliothèque VOD énorme et mise à jour régulièrement.</p>
-               <ul>
-                 {['Films récents', 'Séries complètes', 'Contenu Enfants', 'Documentaires', 'Sans publicité'].map((item, index) => (
-                   <li key={index}>
-                     <Check />
-                     {item}
-                   </li>
-                 ))}
-               </ul>
+        {/* Sécurité Section */}
+        <section id="securite" className={styles.securitySection} aria-labelledby="securite-title">
+          <div className={styles.container}>
+            <div className={`${styles.sectionHeading}`}>
+              <h2 id="securite-title" className={styles.sectionTitle}>Votre Sécurité & Confidentialité</h2>
+              <p className={styles.sectionSubtitle}>Profitez en toute tranquillité.</p>
             </div>
-
-            {/* Carte Service 3 */}
-            <div className={`${styles.card} ${styles.serviceCard}`}>
-               <div className={styles.cardIcon}>
-                 <Wifi />
-               </div>
-               <h3 className={styles.cardTitle}>Streaming Haute Performance</h3>
-               <p>Streaming fluide grâce à nos serveurs dédiés.</p>
-               <ul>
-                 {['Aucun gel (Anti-freeze)', 'Haute Définition', 'Faible Latence', 'Serveurs Stables', 'Support 24/7'].map((item, index) => (
-                   <li key={index}>
-                     <Check />
-                     {item}
-                   </li>
-                 ))}
-               </ul>
+            <div className={styles.securityGrid}>
+              {/* CSS: Apply entrance animations */}
+              {securityFeatures.map((item, index) => {
+                 const IconComponent = item.icon;
+                 return (
+                    <div key={index} className={styles.securityItem}>
+                         <IconComponent className={styles.iconAnimated} aria-hidden="true" />
+                         <span>{item.text}</span>
+                    </div>
+                 );
+              })}
             </div>
+            {/* <p className={styles.vpnRecommendation}>Pour une confidentialité maximale, nous recommandons l'utilisation d'un VPN (non inclus).</p> */}
           </div>
-        </div>
-      </section>
+        </section>
 
-      {/* Section des abonnements */}
-      <section id="abonnements" className={styles.abonnementsSection}>
-        <div className={styles.container}>
-           <div className={styles.sectionHeading}>
-              <h2 className={styles.sectionTitle}>Nos Formules d'Abonnement</h2>
-              <p className={styles.sectionSubtitle}>Choisissez la formule flexible et sans engagement qui vous convient.</p>
-           </div>
+  
 
-          {/* items-stretch est géré via align-items: stretch dans CSS */}
-          <div className={`${styles.cardGrid} ${styles.cardGrid3Cols} ${styles.itemsStretch}`}>
-            {/* Carte Standard */}
-            <div className={`${styles.card} ${styles.pricingCard}`}>
-              <h3 className={styles.cardTitle}>Formule Standard</h3>
-              <p className={styles.cardDescription}>Idéal pour démarrer</p>
-              <div className={styles.price}>19,99€ <span>/mois</span></div>
-              <ul>
-                {[ '5,000+ chaînes', 'Qualité HD', '2 connexions', 'VOD basique', 'Support Email' ].map((feature, index) => (
-                  <li key={index}><Check /><span>{feature}</span></li>
-                ))}
-              </ul>
-              <button onClick={handleWhatsAppContact} className={styles.orderButton}>
-                Commander
-              </button>
-            </div>
 
-            {/* Carte Premium (Populaire) */}
-            <div className={`${styles.card} ${styles.pricingCard} ${styles.popular}`}>
-               {/* Badge ajouté via CSS ::before ou un div séparé */}
-               <div className={styles.popularBadge}>Populaire</div>
-               <h3 className={styles.cardTitle}>Formule Premium</h3>
-               <p className={styles.cardDescription}>Notre meilleure offre</p>
-               <div className={styles.price}>29,99€ <span>/mois</span></div>
-               <ul>
-                 {[ '10,000+ chaînes', 'Qualité HD & 4K', '4 connexions', 'VOD complète', 'Support Prioritaire 24/7' ].map((feature, index) => (
-                   <li key={index}><Check /><span>{feature}</span></li>
-                 ))}
-               </ul>
-               <button onClick={handleWhatsAppContact} className={styles.orderButton}>
-                 Commander
-               </button>
-            </div>
-
-            {/* Carte Famille */}
-            <div className={`${styles.card} ${styles.pricingCard}`}>
-               <h3 className={styles.cardTitle}>Formule Famille</h3>
-               <p className={styles.cardDescription}>Pour toute la tribu</p>
-               <div className={styles.price}>39,99€ <span>/mois</span></div>
-               <ul>
-                 {[ '10,000+ chaînes', 'Qualité HD & 4K', '6 connexions', 'VOD complète', 'Support Prioritaire 24/7', 'Contrôle parental' ].map((feature, index) => (
-                   <li key={index}><Check /><span>{feature}</span></li>
-                 ))}
-               </ul>
-               <button onClick={handleWhatsAppContact} className={styles.orderButton}>
-                 Commander
-               </button>
-            </div>
+        {/* CTA Section */}
+        <section id="cta" className={styles.ctaSection} aria-labelledby="cta-title">
+          {/* CSS: Enhance background effect (pulseGlow) */}
+          <div className={`${styles.container} ${styles.ctaContainer}`}>
+             {/* CSS: Apply entrance animations */}
+            <h2 id="cta-title" className={styles.ctaTitle}>Prêt à Révolutionner Votre TV ?</h2>
+            <p className={styles.ctaSubtitle}>Rejoignez des milliers d'utilisateurs satisfaits. Commencez dès aujourd'hui !</p>
+            {/* Consider a modal confirmation before WhatsApp */}
+            <button
+                onClick={() => handleWhatsAppContact("Bonjour, je suis prêt à commencer ! Parlez-moi des offres.")}
+                className={`${styles.ctaButton} ${styles.gradientButton}`}
+                /* CSS: Add focus-visible styles */
+            >
+              <span>Commencer l'Expérience</span>
+              <ArrowRight />
+            </button>
           </div>
-        </div>
-      </section>
-
-      {/* Section des appareils compatibles */}
-      <section id="appareils" className={styles.appareilsSection}>
-         <div className={styles.container}>
-            <div className={styles.sectionHeading}>
-               <h2 className={styles.sectionTitle}>Appareils Compatibles</h2>
-               <p className={styles.sectionSubtitle}>Profitez de votre contenu préféré sur l'appareil de votre choix.</p>
-            </div>
-
-           <div className={styles.deviceGrid}>
-             {[
-               { icon: Smartphone, name: 'Smartphones', desc: 'iOS & Android' },
-               { icon: Tablet, name: 'Tablettes', desc: 'iPad & Android' },
-               { icon: Tv, name: 'Smart TV', desc: 'Samsung, LG, Android TV...' },
-               { icon: Monitor, name: 'Box TV', desc: 'Android Box, Fire Stick, MAG...' },
-             ].map((device, index) => {
-               const IconComponent = device.icon;
-               return (
-                 <div key={index} className={styles.deviceItem}>
-                   <div className={styles.deviceIconWrapper}>
-                     <IconComponent />
-                   </div>
-                   <h3>{device.name}</h3>
-                   <p>{device.desc}</p>
-                 </div>
-               );
-             })}
-           </div>
-
-           <div className={styles.configBox}>
-             <h3 className={styles.configTitle}>Configuration Recommandée</h3>
-             <div className={styles.configGrid}>
-               <div className={`${styles.configColumn} ${styles.minimal}`}> {/* Classe modificateur */}
-                 <h4>Exigences Minimales</h4>
-                 <ul>
-                   {[
-                     'Connexion internet: 10 Mbps', 'RAM: 2 GB (appareil)',
-                     'Android 5.0+ / iOS 12.0+', 'Smart TV (modèle 2018+)',
-                   ].map((req, index) => ( <li key={index}><Check /><span>{req}</span></li> ))}
-                 </ul>
-               </div>
-
-               <div className={`${styles.configColumn} ${styles.optimal}`}> {/* Classe modificateur */}
-                 <h4>Configuration Optimale (pour 4K)</h4>
-                 <ul>
-                   {[
-                     'Connexion internet: 25+ Mbps', 'Box Android/TV dédiée récente',
-                     'TV 4K compatible HDR', 'Connexion Ethernet (filaire)',
-                   ].map((req, index) => ( <li key={index}><Check /><span>{req}</span></li> ))}
-                 </ul>
-               </div>
-             </div>
-           </div>
-         </div>
-      </section>
-
-      {/* Section FAQ */}
-      <section id="faq" className={styles.faqSection}>
-         <div className={styles.container}>
-             <div className={styles.sectionHeading}>
-                <h2 className={styles.sectionTitle}>Questions Fréquentes (FAQ)</h2>
-                <p className={styles.sectionSubtitle}>Trouvez ici les réponses à vos interrogations.</p>
-             </div>
-
-           <div className={`${styles.cardGrid} ${styles.cardGrid2Cols} ${styles.faqGrid}`}> {/* Grille 2 colonnes + spécifique FAQ */}
-             {[
-                { q: "Qu'est-ce que l'IPTV ?", a: "L'IPTV (Internet Protocol Television) diffuse la TV via Internet, offrant plus de flexibilité que le satellite ou le câble." },
-                { q: "Comment ça marche ?", a: "Après abonnement, vous recevez des identifiants à entrer dans une application compatible (ex: IPTV Smarters, TiviMate) sur votre appareil." },
-                { q: "Combien d'appareils simultanés ?", a: "Cela dépend de votre formule : Standard (2), Premium (4), Famille (6). Une connexion = un appareil à la fois." },
-                { q: "Qualité de streaming garantie ?", a: "Nous offrons des serveurs performants, mais la qualité finale dépend de votre vitesse internet et de la performance de votre appareil." },
-                { q: "Comment contacter le support ?", a: "Via WhatsApp (Premium/Famille) 24/7 ou par Email (Standard). Les détails sont fournis après l'achat." },
-                { q: "Mes données sont-elles sécurisées ?", a: "Oui, nous utilisons des connexions sécurisées et ne partageons pas vos informations personnelles." },
-             ].map((item, index) => (
-               <div key={index} className={`${styles.card} ${styles.faqCard}`}>
-                 <h3>{item.q}</h3>
-                 <p>{item.a}</p>
-               </div>
-             ))}
-           </div>
-         </div>
-      </section>
-
-      {/* Section Sécurité et Confidentialité */}
-       <section id="securite" className={styles.securitySection}> {/* Ajout ID */}
-         <div className={styles.container}>
-           <div className={styles.securityGrid}>
-             <div className={styles.securityTextContent}> {/* Wrapper pour le texte */}
-                <h2 className={styles.sectionTitle} style={{textAlign: 'left'}}>Sécurité et Confidentialité</h2> {/* Alignement spécifique? */}
-               <p className={styles.sectionSubtitle} style={{textAlign: 'left', margin: '0 0 2rem 0'}}>Votre sécurité et la protection de vos données sont notre priorité absolue. Nous nous engageons à vous fournir un service fiable et respectueux de votre vie privée.</p>
-               <div className={styles.securityItemsList}>
-                 {/* Item Sécurité 1 */}
-                 <div className={styles.securityItem}>
-                   <div className={styles.securityIconWrapper}><Shield /></div>
-                   <div><h3>Connexions Sécurisées</h3><p>Nous utilisons des protocoles sécurisés pour protéger vos informations de connexion et votre activité.</p></div>
-                 </div>
-                 {/* Item Sécurité 2 */}
-                 <div className={styles.securityItem}>
-                   <div className={styles.securityIconWrapper}><Check className={styles.greenCheck} /></div> {/* Classe spécifique pour couleur */}
-                   <div><h3>Confidentialité des Données</h3><p>Vos informations personnelles ne sont jamais vendues ou partagées avec des tiers.</p></div>
-                 </div>
-                  {/* Item Sécurité 3 */}
-                 <div className={styles.securityItem}>
-                   <div className={styles.securityIconWrapper}><Headphones /></div>
-                   <div><h3>Support Discret</h3><p>Notre équipe vous assiste pour toute question technique ou de sécurité, en toute confidentialité.</p></div>
-                 </div>
-               </div>
-             </div>
-
-             <div className={styles.trustBox}>
-                <h3 className={styles.trustBoxTitle}>Nos Engagements Sécurité</h3>
-               <div className={styles.trustList}>
-                 {[
-                   'Serveurs protégés contre les attaques DDoS', 'Connexions cryptées possibles (selon l\'app)',
-                   'Politique de non-conservation des logs d\'activité', 'Mises à jour régulières de sécurité',
-                   'Processus de paiement sécurisé', 'Support client réactif et professionnel',
-                 ].map((point, index) => (
-                   <div key={index} className={styles.trustListItem}>
-                     <Check /><span>{point}</span>
-                   </div>
-                 ))}
-               </div>
-             </div>
-           </div>
-         </div>
-       </section>
-
-      {/* Appel à l'action */}
-      <section id="cta" className={styles.ctaSection}> {/* Ajout ID */}
-         <div className={`${styles.container} ${styles.ctaContainer}`}> {/* Modificateur optionnel */}
-            <h2 className={styles.ctaTitle}>Prêt à Révolutionner Votre Expérience TV ?</h2>
-           <p className={styles.ctaSubtitle}>N'attendez plus ! Contactez-nous sur WhatsApp pour un essai gratuit ou pour choisir votre abonnement.</p>
-           <button onClick={handleWhatsAppContact} className={styles.ctaButton}>
-             <span>Discuter sur WhatsApp</span>
-             <ArrowRight />
-           </button>
-         </div>
-      </section>
+        </section>
+      </main>
 
       {/* Footer */}
       <footer className={styles.footer}>
-         <div className={styles.container}>
-           <div className={styles.footerGrid}>
-             {/* Colonne Logo & Description */}
-             <div>
-               <div onClick={() => scrollToSection('accueil')} className={styles.footerLogo}>
-                  IPTV<span>Vision</span>
-               </div>
-               <p>Votre source fiable pour un divertissement IPTV stable et de haute qualité.</p>
-             </div>
+        <div className={styles.container}>
+          <div className={styles.footerGrid}>
+            {/* Footer Column 1: Logo & About */}
+            <div>
+                <a
+                    href="#accueil"
+                    className={styles.footerLogoLink}
+                    onClick={(e) => { e.preventDefault(); scrollToSection('accueil'); }}
+                    aria-label="IPTV Vision Home"
+                    /* CSS: Add focus-visible styles */
+                    >
+                   <div className={styles.footerLogo}>IPTV<span>Vision</span></div>
+                </a>
+              <p className={styles.footerDescription}>Votre source N°1 pour un divertissement IPTV stable, premium et abordable.</p>
+              {/* Social Media Icons Placeholder */}
+              {/* <div className={styles.socialIcons}>...</div> */}
+            </div>
 
-             {/* Colonne Services */}
-             <div>
-               <h3 className={styles.footerHeading}>Services</h3>
-               <ul>
-                 {[{ name: 'TV en Direct', id: 'services' }, { name: 'VOD Premium', id: 'services' }, { name: 'Abonnements', id: 'abonnements' }, { name: 'Appareils Compatibles', id: 'appareils' }, { name: 'Support 24/7', id: 'faq' }].map((item, index) => (
-                   <li key={index}><button onClick={() => scrollToSection(item.id)}>{item.name}</button></li>
-                 ))}
-               </ul>
-             </div>
-
-             {/* Colonne Support */}
-             <div>
-               <h3 className={styles.footerHeading}>Support</h3>
-               <ul>
-                 {[{ name: 'FAQ', id: 'faq' }, { name: 'Guides (bientôt)', id: '#' }, { name: 'Contactez-nous', id: '#' }, { name: 'Conditions Générales', id: '#' }, { name: 'Politique de Confidentialité', id: '#' }].map((item, index) => (
-                    <li key={index}>
-                     {item.id === '#' ? ( <span className={styles.disabledLink}>{item.name}</span> ) : ( <button onClick={() => item.id.startsWith('#') ? null : scrollToSection(item.id)}>{item.name}</button> )}
+            {/* Footer Column 2: Quick Links */}
+            <div>
+              <h3 className={styles.footerHeading}>Liens Rapides</h3>
+              <ul className={styles.footerLinksList}>
+                {navItems
+                    .filter(item => ['accueil', 'services', 'abonnements', 'faq'].includes(item.id)) // Filter relevant links
+                    .map((item) => (
+                    <li key={item.id}>
+                        <a
+                            href={`#${item.id}`}
+                            onClick={(e) => { e.preventDefault(); scrollToSection(item.id); }}
+                            /* CSS: Add focus-visible styles */
+                        >
+                            {item.label}
+                        </a>
                     </li>
-                 ))}
-               </ul>
-             </div>
+                ))}
+                 {/* Add links to Terms, Privacy Policy if available */}
+                 {/* <li><a href="/terms">Conditions</a></li> */}
+                 {/* <li><a href="/privacy">Confidentialité</a></li> */}
+              </ul>
+            </div>
 
-             {/* Colonne Contact */}
-             <div className={styles.footerContact}> {/* Classe spécifique pour la colonne contact */}
-               <h3 className={styles.footerHeading}>Contact Rapide</h3>
-               <button onClick={handleWhatsAppContact} className={`${styles.whatsappButton} ${styles.footerWhatsappButton}`}> {/* Modificateur pour footer */}
-                 {/* L'icône SVG peut être mise directement ici ou via CSS background-image si préférée sans JS */}
-                 <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="currentColor"><path d="M.057 22.114l1.687-6.163c-1.041-1.804-1.588-3.849-1.587-5.946.003-6.556 5.338-11.891 11.893-11.891 3.181.001 6.167 1.24 8.413 3.488 2.245 2.248 3.481 5.236 3.48 8.414-.003 6.557-5.338 11.892-11.893 11.892-1.99-.001-3.951-.5-5.688-1.448l-6.305 1.654zm6.597-3.807c1.676.995 3.276 1.591 5.392 1.592 5.448 0 9.886-4.434 9.889-9.885.002-5.462-4.415-9.89-9.881-9.892-5.452 0-9.887 4.434-9.889 9.884-.001 2.225.651 3.891 1.746 5.634l-.999 3.648 3.742-.981zm11.387-5.464c-.074-.124-.272-.198-.57-.347-.297-.149-1.758-.868-2.031-.967-.272-.099-.47-.149-.669.149-.198.297-.768.967-.941 1.165-.173.198-.347.223-.644.074-.297-.149-1.255-.462-2.39-1.475-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.297-.347.446-.521.151-.172.2-.296.3-.495.099-.198.05-.372-.025-.521-.075-.148-.669-1.611-.916-2.206-.242-.579-.487-.501-.669-.51l-.57-.01c-.198 0-.52.074-.792.372s-1.04 1.016-1.04 2.479 1.065 2.876 1.213 3.074c.149.198 2.096 3.2 5.077 4.487.709.306 1.262.489 1.694.626.712.226 1.36.194 1.872.118.571-.085 1.758-.719 2.006-1.413.248-.695.248-1.29.173-1.414z"/></svg>
-                 <span>WhatsApp</span>
+            {/* Footer Column 3: Contact */}
+            <div>
+              <h3 className={styles.footerHeading}>Contactez-Nous</h3>
+               <p>Support rapide via WhatsApp :</p>
+               <button
+                 onClick={() => handleWhatsAppContact()}
+                 className={`${styles.whatsappButtonFooter} ${styles.gradientButton}`}
+                 /* CSS: Add focus-visible styles. Maybe style slightly smaller */
+                 >
+                 <span>Discuter sur WhatsApp</span>
+                 <ArrowRight />
                </button>
-               <p>Support disponible 24/7</p>
-             </div>
-           </div>
+               {/* Add Email contact if available */}
+               {/* <p>Ou par email : <a href="mailto:support@iptvvision.com">support@iptvvision.com</a></p> */}
+            </div>
+          </div>
 
-           <div className={styles.footerBottom}>
-              <p>&copy; {new Date().getFullYear()} IPTVision. Tous droits réservés.</p>
-              <p>Avertissement : Assurez-vous d'avoir les droits nécessaires pour accéder au contenu diffusé via IPTV.</p>
-           </div>
-         </div>
+          {/* Footer Bottom Bar */}
+          <div className={styles.footerBottom}>
+            <p>&copy; {new Date().getFullYear()} IPTVision. Tous droits réservés. Developed by Mouad</p>
+            {/* Maybe add a disclaimer about channel availability or legal notice */}
+            {/* <p className={styles.disclaimer}>Disclaimer: ...</p> */}
+          </div>
+        </div>
       </footer>
+
+       {/* Back to Top Button Placeholder - Implement with useState and scroll listener */}
+       {/* {showBackToTop && <button onClick={scrollToTop} className={styles.backToTopButton}>^</button>} */}
+
     </div>
   );
 };
